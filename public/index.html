@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Two Left Feet Studio - Interactive Presentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Nunito:wght@300;400;600;700&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --teal: #20B2AA;
+            --sunshine-yellow: #FFD700;
+            --bubblegum-coral: #FF7F7F;
+            --soft-lilac: #DDA0DD;
+            --sky-blue: #87CEEB;
+            --dark-charcoal: #2F2F2F;
+            --white: #FFFFFF;
+            --light-gray: #F8F9FA;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, var(--light-gray) 0%, var(--white) 100%);
+            min-height: 100vh;
+            color: var(--dark-charcoal);
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.5rem;
+            color: var(--teal);
+            margin-bottom: 10px;
+            text-align: center;
+            animation: wiggle 2s ease-in-out infinite;
+        }
+
+        .tagline {
+            font-family: 'Caveat', cursive;
+            font-size: 1.2rem;
+            color: var(--bubblegum-coral);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .card {
+            background: white;
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '♪ ♫ ♪';
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            font-size: 1.5rem;
+            color: var(--sunshine-yellow);
+            opacity: 0.3;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .welcome-screen {
+            display: block;
+        }
+
+        .question-screen {
+            display: none;
+        }
+
+        .admin-screen {
+            display: none;
+        }
+
+        .results-screen {
+            display: none;
+        }
+
+        h1 {
+            font-family: 'Fredoka One', cursive;
+            color: var(--teal);
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        h2 {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 600;
+            color: var(--dark-charcoal);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .name-input {
+            width: 100%;
+            padding: 15px;
+            border: 3px solid var(--soft-lilac);
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-family: 'Nunito', sans-serif;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .name-input:focus {
+            outline: none;
+            border-color: var(--teal);
+            transform: scale(1.02);
+        }
+
+        .btn {
+            background: var(--teal);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Nunito', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            background: var(--bubblegum-coral);
+            transform: translateY(-2px) rotate(1deg);
+            box-shadow: 0 5px 15px rgba(255, 127, 127, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0) rotate(-1deg);
+        }
+
+        .option-btn {
+            width: 100%;
+            margin-bottom: 15px;
+            background: var(--sky-blue);
+            animation: slideIn 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        .option-btn:nth-child(1) { animation-delay: 0.1s; }
+        .option-btn:nth-child(2) { animation-delay: 0.2s; }
+        .option-btn:nth-child(3) { animation-delay: 0.3s; }
+        .option-btn:nth-child(4) { animation-delay: 0.4s; }
+        .option-btn:nth-child(5) { animation-delay: 0.5s; }
+
+        .option-btn:hover {
+            background: var(--sunshine-yellow);
+            color: var(--dark-charcoal);
+        }
+
+        .text-input {
+            width: 100%;
+            padding: 15px;
+            border: 3px solid var(--soft-lilac);
+            border-radius: 15px;
+            font-size: 1rem;
+            font-family: 'Nunito', sans-serif;
+            margin-bottom: 20px;
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .thank-you {
+            background: var(--sunshine-yellow);
+            color: var(--dark-charcoal);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            animation: bounce 0.6s ease-out;
+        }
+
+        .results-chart {
+            margin: 20px 0;
+        }
+
+        .result-bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            background: var(--light-gray);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .result-fill {
+            height: 40px;
+            background: var(--teal);
+            transition: width 1s ease-out;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .result-label {
+            position: absolute;
+            left: 10px;
+            color: var(--dark-charcoal);
+            font-weight: 600;
+            z-index: 2;
+        }
+
+        .dancing-feet {
+            position: fixed;
+            font-size: 2rem;
+            animation: dance 4s linear infinite;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+
+        .admin-panel {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .admin-form {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--dark-charcoal);
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid var(--soft-lilac);
+            border-radius: 8px;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .options-container {
+            border: 2px dashed var(--soft-lilac);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .option-input {
+            display: flex;
+            margin-bottom: 10px;
+            gap: 10px;
+        }
+
+        .add-option {
+            background: var(--sunshine-yellow);
+            color: var(--dark-charcoal);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .question-list {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .question-item {
+            background: var(--light-gray);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .delete-btn {
+            background: var(--bubblegum-coral);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .current-slide {
+            background: var(--teal);
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(2deg); }
+            75% { transform: rotate(-2deg); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        @keyframes dance {
+            0% { transform: translateX(-100px) rotate(0deg); }
+            25% { transform: translateX(25vw) rotate(180deg); }
+            50% { transform: translateX(50vw) rotate(360deg); }
+            75% { transform: translateX(75vw) rotate(540deg); }
+            100% { transform: translateX(100vw) rotate(720deg); }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            margin: 20px 0;
+        }
+
+        .loading-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--teal);
+            border-radius: 50%;
+            animation: loadingBounce 1.4s ease-in-out infinite both;
+        }
+
+        .loading-dot:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes loadingBounce {
+            0%, 80%, 100% { 
+                transform: scale(0);
+            } 40% { 
+                transform: scale(1.0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Dancing feet background elements -->
+    <div class="dancing-feet" style="top: 10%; left: 0;">👣</div>
+    <div class="dancing-feet" style="top: 30%; left: 0; animation-delay: -1s;">🦶</div>
+    <div class="dancing-feet" style="top: 50%; left: 0; animation-delay: -2s;">👣</div>
+    <div class="dancing-feet" style="top: 70%; left: 0; animation-delay: -3s;">🦶</div>
+
+    <div class="container">
+        <!-- Welcome Screen -->
+        <div id="welcomeScreen" class="welcome-screen">
+            <div class="card">
+                <div class="logo">Two Left Feet Studio</div>
+                <div class="tagline">Dancing twice as hard with two left feet!</div>
+                
+                <h2>Welcome to our Interactive Presentation!</h2>
+                <p style="margin-bottom: 20px; color: var(--dark-charcoal);">
+                    Get ready to wiggle, wobble, and shine with us! 
+                    <br><br>
+                    Enter your name to join the fun (optional):
+                </p>
+                
+                <input type="text" id="participantName" class="name-input" placeholder="Your name (or stay anonymous!)">
+                
+                <button class="btn" onclick="joinPresentation()">
+                    Let's Dance! 💃
+                </button>
+                
+                <div class="loading" id="loadingIndicator" style="display: none;">
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question Screen -->
+        <div id="questionScreen" class="question-screen">
+            <div class="card">
+                <div class="logo">Two Left Feet Studio</div>
+                
+                <div id="questionContent">
+                    <!-- Dynamic content will be inserted here -->
+                </div>
+                
+                <div id="thankYouMessage" style="display: none;">
+                    <div class="thank-you">
+                        <h2>Mistakes make magic! ✨</h2>
+                        <p>Thanks for sharing your thoughts!</p>
+                    </div>
+                </div>
+                
+                <div id="resultsContent" style="display: none;">
+                    <!-- Results will be shown here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Panel -->
+        <div id="adminScreen" class="admin-screen">
+            <div class="admin-panel">
+                <div class="card">
+                    <div class="logo">Admin Panel</div>
+                    <div class="tagline">Every stumble starts with a plan!</div>
+                    
+                    <div class="current-slide" id="currentSlideDisplay">
+                        Current Slide: None
+                    </div>
+                    
+                    <div class="admin-form">
+                        <h2>Create New Interactive Element</h2>
+                        
+                        <div class="form-group">
+                            <label for="slideId">Slide Identifier:</label>
+                            <input type="text" id="slideId" placeholder="e.g., Poll 1, Q&A 2, Vote 3">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="elementType">Type:</label>
+                            <select id="elementType" onchange="updateFormFields()">
+                                <option value="poll">Multiple Choice Poll</option>
+                                <option value="question">Open Text Question</option>
+                                <option value="vote">Voting</option>
+                                <option value="info">Information Display</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="elementTitle">Title/Question:</label>
+                            <textarea id="elementTitle" rows="3" placeholder="Enter your question or information..."></textarea>
+                        </div>
+                        
+                        <div id="optionsContainer" class="options-container">
+                            <label>Answer Options:</label>
+                            <div id="optionsList">
+                                <div class="option-input">
+                                    <input type="text" placeholder="Option 1" class="option-text">
+                                    <button type="button" class="delete-btn" onclick="removeOption(this)">×</button>
+                                </div>
+                                <div class="option-input">
+                                    <input type="text" placeholder="Option 2" class="option-text">
+                                    <button type="button" class="delete-btn" onclick="removeOption(this)">×</button>
+                                </div>
+                            </div>
+                            <button type="button" class="add-option" onclick="addOption()">+ Add Option</button>
+                        </div>
+                        
+                        <button class="btn" onclick="saveElement()">Save Element</button>
+                    </div>
+                    
+                    <div class="question-list">
+                        <h2>Saved Elements</h2>
+                        <div id="savedElements">
+                            <!-- Saved elements will appear here -->
+                        </div>
+                    </div>
+                    
+                    <div class="admin-form">
+                        <h2>Live Results</h2>
+                        <div id="liveResults">
+                            <p>No active poll or vote</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentUser = '';
+        let currentSlide = '';
+        let presentationElements = {};
+        let responses = {};
+        let isAdmin = false;
+
+        // Check for admin access
+        function checkAdminAccess() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const adminKey = urlParams.get('admin');
+            if (adminKey === 'twoleftfeet2024') {
+                isAdmin = true;
+                showAdminPanel();
+                return true;
+            }
+            return false;
+        }
+
+        // Initialize the app
+        function init() {
+            if (checkAdminAccess()) {
+                return;
+            }
+            
+            // Load any existing presentation elements
+            loadPresentationElements();
+            
+            // Start polling for slide changes
+            pollForSlideChanges();
+        }
+
+        // Join the presentation
+        function joinPresentation() {
+            const nameInput = document.getElementById('participantName');
+            currentUser = nameInput.value.trim() || 'Anonymous Dancer';
+            
+            document.getElementById('loadingIndicator').style.display = 'flex';
+            
+            setTimeout(() => {
+                document.getElementById('welcomeScreen').style.display = 'none';
+                document.getElementById('questionScreen').style.display = 'block';
+                showWaitingMessage();
+            }, 1000);
+        }
+
+        // Show waiting message
+        function showWaitingMessage() {
+            const content = document.getElementById('questionContent');
+            content.innerHTML = `
+                <h1>Ready to Dance! 💃</h1>
+                <p style="font-size: 1.1rem; margin-bottom: 20px;">
+                    Hey ${currentUser}! We're warming up...
+                </p>
+                <p style="color: var(--bubblegum-coral); font-family: 'Caveat', cursive; font-size: 1.2rem;">
+                    "Every sparkle starts with a stumble"
+                </p>
+                <div class="loading">
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                </div>
+            `;
+        }
+
+        // Show admin panel
+        function showAdminPanel() {
+            document.getElementById('welcomeScreen').style.display = 'none';
+            document.getElementById('questionScreen').style.display = 'none';
+            document.getElementById('adminScreen').style.display = 'block';
+            
+            loadSavedElements();
+            updateFormFields();
+        }
+
+        // Update form fields based on element type
+        function updateFormFields() {
+            const elementType = document.getElementById('elementType').value;
+            const optionsContainer = document.getElementById('optionsContainer');
+            
+            if (elementType === 'info') {
+                optionsContainer.style.display = 'none';
+            } else {
+                optionsContainer.style.display = 'block';
+            }
+        }
+
+        // Add option input
+        function addOption() {
+            const optionsList = document.getElementById('optionsList');
+            const optionCount = optionsList.children.length + 1;
+            
+            if (optionCount <= 5) {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option-input';
+                optionDiv.innerHTML = `
+                    <input type="text" placeholder="Option ${optionCount}" class="option-text">
+                    <button type="button" class="delete-btn" onclick="removeOption(this)">×</button>
+                `;
+                optionsList.appendChild(optionDiv);
+            }
+        }
+
+        // Remove option input
+        function removeOption(button) {
+            const optionsList = document.getElementById('optionsList');
+            if (optionsList.children.length > 2) {
+                button.parentElement.remove();
+            }
+        }
+
+        // Save element
+        function saveElement() {
+            const slideId = document.getElementById('slideId').value.trim();
+            const elementType = document.getElementById('elementType').value;
+            const title = document.getElementById('elementTitle').value.trim();
+            
+            if (!slideId || !title) {
+                alert('Please fill in the slide identifier and title/question.');
+                return;
+            }
+            
+            const element = {
+                id: slideId,
+                type: elementType,
+                title: title,
+                options: [],
+                responses: []
+            };
+            
+            if (elementType !== 'info') {
+                const optionInputs = document.querySelectorAll('.option-text');
+                optionInputs.forEach(input => {
+                    if (input.value.trim()) {
+                        element.options.push(input.value.trim());
+                    }
+                });
+                
+                if (element.options.length < 2 && elementType !== 'question') {
+                    alert('Please provide at least 2 options for polls and votes.');
+                    return;
+                }
+            }
+            
+            presentationElements[slideId] = element;
+            savePresentationElements();
+            loadSavedElements();
+            
+            // Clear form
+            document.getElementById('slideId').value = '';
+            document.getElementById('elementTitle').value = '';
+            document.querySelectorAll('.option-text').forEach(input => input.value = '');
+            
+            alert('Element saved successfully!');
+        }
+
+        // Load saved elements in admin panel
+        function loadSavedElements() {
+            const container = document.getElementById('savedElements');
+            container.innerHTML = '';
+            
+            Object.values(presentationElements).forEach(element => {
+                const elementDiv = document.createElement('div');
+                elementDiv.className = 'question-item';
+                elementDiv.innerHTML = `
+                    <div>
+                        <strong>${element.id}</strong> (${element.type})<br>
+                        <small>${element.title}</small>
+                    </div>
+                    <button class="delete-btn" onclick="deleteElement('${element.id}')">Delete</button>
+                `;
+                container.appendChild(elementDiv);
+            });
+        }
+
+        // Delete element
+        function deleteElement(slideId) {
+            if (confirm('Are you sure you want to delete this element?')) {
+                delete presentationElements[slideId];
+                savePresentationElements();
+                loadSavedElements();
+            }
+        }
+
+        // Save presentation elements to localStorage
+        function savePresentationElements() {
+            localStorage.setItem('tlf_presentation_elements', JSON.stringify(presentationElements));
+        }
+
+        // Load presentation elements from localStorage
+        function loadPresentationElements() {
+            const saved = localStorage.getItem('tlf_presentation_elements');
+            if (saved) {
+                presentationElements = JSON.parse(saved);
+            }
+        }
+
+        // Poll for slide changes (simulated - in real implementation, this would connect to your server)
+        function pollForSlideChanges() {
+            if (isAdmin) return;
+            
+            setInterval(() => {
+                // In real implementation, this would make an API call to check current slide
+                // For now, we'll simulate slide changes based on localStorage for demo
+                const simulatedSlide = localStorage.getItem('tlf_current_slide');
+                if (simulatedSlide && simulatedSlide !== currentSlide) {
+                    currentSlide = simulatedSlide;
+                    handleSlideChange(currentSlide);
+                }
+            }, 2000);
+        }
+
+        // Handle slide change
+        function handleSlideChange(slideName) {
+            if (isAdmin) {
+                document.getElementById('currentSlideDisplay').textContent = `Current Slide: ${slideName}`;
+                return;
+            }
+            
+            const element = presentationElements[slideName];
+            if (element) {
+                displayInteractiveElement(element);
+            } else {
+                showWaitingMessage();
+            }
+        }
+
+        // Display interactive element
+        function displayInteractiveElement(element) {
+            const content = document.getElementById('questionContent');
+            document.getElementById('thankYouMessage').style.display = 'none';
+            document.getElementById('resultsContent').style.display = 'none';
+            
+            let html = `<h1>${element.title}</h1>`;
+            
+            if (element.type === 'info') {
+                html += `<p style="font-size: 1.1rem; margin: 20px 0;">${element.title}</p>`;
+            } else if (element.type === 'question') {
+                html += `
+                    <textarea id="textResponse" class="text-input" placeholder="Share your thoughts..."></textarea>
+                    <button class="btn" onclick="submitTextResponse('${element.id}')">
+                        Submit Response ✨
+                    </button>
+                `;
+            } else {
+                element.options.forEach((option, index) => {
+                    html += `
+                        <button class="btn option-btn" onclick="submitChoiceResponse('${element.id}', ${index}, '${option}')">
+                            ${option}
+                        </button>
+                    `;
+                });
+            }
+            
+            content.innerHTML = html;
+        }
+
+        // Submit text response
+        function submitTextResponse(elementId) {
+            const response = document.getElementById('textResponse').value.trim();
+            if (!response) return;
+            
+            // Store response
+            if (!responses[elementId]) responses[elementId] = [];
+            responses[elementId].push({
+                user: currentUser,
+                response: response,
+                timestamp: new Date()
+            });
+            
+            saveResponses();
+            showThankYou();
+        }
+
+        // Submit choice response
+        function submitChoiceResponse(elementId, optionIndex, optionText) {
+            // Store response
+            if (!responses[elementId]) responses[elementId] = [];
+            responses[elementId].push({
+                user: currentUser,
+                option: optionIndex,
+                optionText: optionText,
+                timestamp: new Date()
+            });
+            
+            saveResponses();
+            showThankYou();
+            
+            // Show results after a delay
+            setTimeout(() => {
+                showResults(elementId);
+            }, 2000);
+        }
+
+        // Show thank you message
+        function showThankYou() {
+            document.getElementById('questionContent').style.display = 'none';
+            document.getElementById('thankYouMessage').style.display = 'block';
+            
+            const messages = [
+                "Mistakes make magic! ✨",
+                "We wiggle. We wobble. We shine! 💫",
+                "Every sparkle starts with a stumble! ⭐",
+                "Dancing twice as hard! 💃",
+                "Gracias for sharing! 🌟"
+            ];
+            
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            document.querySelector('.thank-you h2').textContent = randomMessage;
+        }
+
+        // Show results
+        function showResults(elementId) {
+            const element = presentationElements[elementId];
+            const elementResponses = responses[elementId] || [];
+            
+            if (element.type === 'question') {
+                // Show text responses
+                let html = '<h2>What everyone shared:</h2>';
+                elementResponses.forEach(response => {
+                    html += `
+                        <div style="background: var(--light-gray); padding: 15px; border-radius: 10px; margin-bottom: 10px; text-align: left;">
+                            <strong>${response.user}:</strong> ${response.response}
+                        </div>
+                    `;
+                });
+                document.getElementById('resultsContent').innerHTML = html;
+            } else {
+                // Show poll/vote results
+                const results = {};
+                element.options.forEach((option, index) => {
+                    results[index] = {
+                        text: option,
+                        count: elementResponses.filter(r => r.option === index).length
+                    };
+                });
+                
+                const total = elementResponses.length;
+                let html = '<h2>Live Results:</h2><div class="results-chart">';
+                
+                Object.values(results).forEach(result => {
+                    const percentage = total > 0 ? (result.count / total * 100) : 0;
+                    html += `
+                        <div class="result-bar">
+                            <div class="result-label">${result.text}</div>
+                            <div class="result-fill" style="width: ${percentage}%">
+                                ${result.count}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+                document.getElementById('resultsContent').innerHTML = html;
+            }
+            
+            document.getElementById('resultsContent').style.display = 'block';
+        }
+
+        // Save responses to localStorage
+        function saveResponses() {
+            localStorage.setItem('tlf_responses', JSON.stringify(responses));
+        }
+
+        // Load responses from localStorage
+        function loadResponses() {
+            const saved = localStorage.getItem('tlf_responses');
+            if (saved) {
+                responses = JSON.parse(saved);
+            }
+        }
+
+        // Initialize app when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadResponses();
+            init();
+        });
+
+        // Demo slide simulator for admin testing
+        function simulateSlideChange(slideName) {
+            localStorage.setItem('tlf_current_slide', slideName);
+            if (isAdmin) {
+                document.getElementById('currentSlideDisplay').textContent = `Current Slide: ${slideName}`;
+            }
+        }
+    </script>
+</body>
+</html>
