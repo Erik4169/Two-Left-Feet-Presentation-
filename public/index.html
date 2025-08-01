@@ -618,7 +618,7 @@
             const elementType = document.getElementById('elementType').value;
             const optionsContainer = document.getElementById('optionsContainer');
             
-            if (elementType === 'info') {
+            if (elementType === 'info' || elementType === 'question') {
                 optionsContainer.style.display = 'none';
             } else {
                 optionsContainer.style.display = 'block';
@@ -668,7 +668,8 @@
                 responses: []
             };
             
-            if (elementType !== 'info') {
+            // Only collect options for polls and votes, not for open questions or info
+            if (elementType !== 'info' && elementType !== 'question') {
                 const optionInputs = document.querySelectorAll('.option-text');
                 optionInputs.forEach(input => {
                     if (input.value.trim()) {
@@ -676,7 +677,7 @@
                     }
                 });
                 
-                if (element.options.length < 2 && elementType !== 'question') {
+                if (element.options.length < 2) {
                     alert('Please provide at least 2 options for polls and votes.');
                     return;
                 }
