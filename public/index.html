@@ -328,6 +328,16 @@
             font-weight: 600;
         }
 
+        .sync-status {
+            background: var(--sunshine-yellow);
+            color: var(--dark-charcoal);
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
         @keyframes wiggle {
             0%, 100% { transform: rotate(0deg); }
             25% { transform: rotate(2deg); }
@@ -474,6 +484,10 @@
                     <div class="logo">Admin Panel</div>
                     <div class="tagline">Every stumble starts with a plan!</div>
                     
+                    <div class="sync-status" id="syncStatus">
+                        🔗 Google Slides sync ready
+                    </div>
+                    
                     <div class="current-slide" id="currentSlideDisplay">
                         Current Slide: None
                     </div>
@@ -545,6 +559,47 @@
         let responses = {};
         let isAdmin = false;
 
+        // API endpoint handler for Google Slides sync
+        function handleApiRequest() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const slideName = urlParams.get('slideName');
+            
+            if (slideName) {
+                // This is an API sync request from Google Slides
+                console.log('Received slide sync:', slideName);
+                
+                // Update current slide
+                currentSlide = slideName;
+                localStorage.setItem('tlf_current_slide', slideName);
+                
+                // Update admin display if in admin mode
+                if (isAdmin) {
+                    document.getElementById('currentSlideDisplay').textContent = `Current Slide: ${slideName}`;
+                    updateSyncStatus(`✅ Synced: ${slideName}`);
+                } else {
+                    // Update participant view
+                    handleSlideChange(slideName);
+                }
+                
+                // Return success response (for Google Apps Script)
+                return { success: true, slide: slideName, timestamp: new Date().toISOString() };
+            }
+            
+            return null;
+        }
+
+        // Update sync status in admin panel
+        function updateSyncStatus(message) {
+            const statusEl = document.getElementById('syncStatus');
+            if (statusEl) {
+                statusEl.textContent = message;
+                // Reset to default after 3 seconds
+                setTimeout(() => {
+                    statusEl.textContent = '🔗 Google Slides sync ready';
+                }, 3000);
+            }
+        }
+
         // Check for admin access
         function checkAdminAccess() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -559,6 +614,13 @@
 
         // Initialize the app
         function init() {
+            // Check if this is an API sync request first
+            const apiResponse = handleApiRequest();
+            if (apiResponse) {
+                // This was an API request, don't show normal UI
+                return;
+            }
+            
             if (checkAdminAccess()) {
                 return;
             }
@@ -611,6 +673,12 @@
             
             loadSavedElements();
             updateFormFields();
+            
+            // Load current slide if available
+            const currentSlideFromStorage = localStorage.getItem('tlf_current_slide');
+            if (currentSlideFromStorage) {
+                document.getElementById('currentSlideDisplay').textContent = `Current Slide: ${currentSlideFromStorage}`;
+            }
         }
 
         // Update form fields based on element type
@@ -736,23 +804,23 @@
             }
         }
 
-        // Poll for slide changes (simulated - in real implementation, this would connect to your server)
+        // Poll for slide changes (enhanced for Google Slides integration)
         function pollForSlideChanges() {
             if (isAdmin) return;
             
             setInterval(() => {
-                // In real implementation, this would make an API call to check current slide
-                // For now, we'll simulate slide changes based on localStorage for demo
-                const simulatedSlide = localStorage.getItem('tlf_current_slide');
-                if (simulatedSlide && simulatedSlide !== currentSlide) {
-                    currentSlide = simulatedSlide;
+                const newSlide = localStorage.getItem('tlf_current_slide');
+                if (newSlide && newSlide !== currentSlide) {
+                    currentSlide = newSlide;
                     handleSlideChange(currentSlide);
                 }
-            }, 2000);
+            }, 1000); // Check more frequently for better responsiveness
         }
 
         // Handle slide change
         function handleSlideChange(slideName) {
+            console.log('Handling slide change to:', slideName);
+            
             if (isAdmin) {
                 document.getElementById('currentSlideDisplay').textContent = `Current Slide: ${slideName}`;
                 return;
@@ -922,7 +990,31 @@
             localStorage.setItem('tlf_current_slide', slideName);
             if (isAdmin) {
                 document.getElementById('currentSlideDisplay').textContent = `Current Slide: ${slideName}`;
+                updateSyncStatus(`📍 Manual sync: ${slideName}`);
             }
+        }
+
+        // Enhanced API endpoint simulation
+        // In a real deployment, you'd handle this server-side, but for client-side apps:
+        if (window.location.search.includes('slideName=')) {
+            // Prevent normal app initialization for API calls
+            const urlParams = new URLSearchParams(window.location.search);
+            const slideName = urlParams.get('slideName');
+            
+            // Store the slide change
+            localStorage.setItem('tlf_current_slide', slideName);
+            
+            // Log for debugging
+            console.log('API Sync received:', slideName);
+            
+            // Return minimal response for Google Apps Script
+            document.body.innerHTML = `
+                <div style="font-family: Arial; padding: 20px; text-align: center; background: #f0f8ff;">
+                    <h2>✅ Sync Successful</h2>
+                    <p>Slide updated to: <strong>${slideName}</strong></p>
+                    <p>Timestamp: ${new Date().toISOString()}</p>
+                </div>
+            `;
         }
     </script>
 </body>
