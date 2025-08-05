@@ -207,6 +207,112 @@ z-index: 1000;
 font-weight: 600;
 box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
+
+.contact-info-btn {
+position: fixed;
+bottom: 20px;
+right: 20px;
+background: var(--bubblegum-coral);
+color: white;
+border: none;
+padding: 12px 20px;
+border-radius: 25px;
+font-size: 0.9rem;
+font-weight: 600;
+cursor: pointer;
+box-shadow: 0 4px 15px rgba(255, 127, 127, 0.3);
+transition: all 0.3s ease;
+z-index: 1000;
+font-family: 'Nunito', sans-serif;
+}
+
+.contact-info-btn:hover {
+background: var(--sunshine-yellow);
+color: var(--dark-charcoal);
+transform: translateY(-2px);
+box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+}
+
+.contact-form-overlay {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0,0,0,0.7);
+display: none;
+justify-content: center;
+align-items: center;
+z-index: 2000;
+}
+
+.contact-form-modal {
+background: white;
+padding: 30px;
+border-radius: 15px;
+max-width: 500px;
+width: 90%;
+box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.contact-form-modal h3 {
+color: var(--teal);
+margin-bottom: 20px;
+text-align: center;
+font-family: 'Fredoka One', cursive;
+}
+
+.contact-form-modal .form-group {
+margin-bottom: 20px;
+}
+
+.contact-form-modal input,
+.contact-form-modal textarea {
+width: 100%;
+padding: 12px;
+border: 2px solid var(--soft-lilac);
+border-radius: 8px;
+font-family: 'Nunito', sans-serif;
+}
+
+.contact-form-modal textarea {
+height: 100px;
+resize: vertical;
+}
+
+.contact-form-buttons {
+display: flex;
+gap: 15px;
+justify-content: center;
+margin-top: 25px;
+}
+
+.contact-form-buttons button {
+padding: 12px 25px;
+border: none;
+border-radius: 8px;
+font-weight: 600;
+cursor: pointer;
+font-family: 'Nunito', sans-serif;
+}
+
+.submit-contact {
+background: var(--teal);
+color: white;
+}
+
+.cancel-contact {
+background: var(--light-gray);
+color: var(--dark-charcoal);
+}
+
+.submit-contact:hover {
+background: var(--bubblegum-coral);
+}
+
+.cancel-contact:hover {
+background: var(--soft-lilac);
+}
 </style>
 </head>
 <body>
@@ -268,8 +374,11 @@ box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 <button type="button" class="btn" onclick="importQuestions()" style="background: var(--soft-lilac); color: var(--dark-charcoal);">
 📤 Import Questions
 </button>
-<button type="button" class="btn" onclick="testStorage()" style="background: var(--sky-blue); color: var(--dark-charcoal);">
+                <button type="button" class="btn" onclick="testStorage()" style="background: var(--sky-blue); color: var(--dark-charcoal);">
 🔧 Test Storage
+</button>
+<button type="button" class="btn" onclick="viewContactSubmissions()" style="background: var(--bubblegum-coral); color: white;">
+📋 View Contact Submissions
 </button>
 </div>
 <div class="backup-info">
@@ -476,6 +585,104 @@ function testStorage() {
 
     } catch (error) {
         alert(`❌ Storage test failed!\n\nError: ${error.message}\n\nTry using Export/Import for backup.`);
+    }
+}
+
+// Contact form functions
+function showContactForm() {
+    document.getElementById('contactFormOverlay').style.display = 'flex';
+}
+
+function hideContactForm() {
+    document.getElementById('contactFormOverlay').style.display = 'none';
+    // Clear form
+    document.getElementById('contactName').value = '';
+    document.getElementById('contactEmail').value = '';
+    document.getElementById('contactPhone').value = '';
+    document.getElementById('contactInterest').value = '';
+}
+
+function submitContactInfo() {
+    const name = document.getElementById('contactName').value.trim();
+    const email = document.getElementById('contactEmail').value.trim();
+    const phone = document.getElementById('contactPhone').value.trim();
+    const interest = document.getElementById('contactInterest').value.trim();
+
+    // Basic validation
+    if (!name || !email) {
+        alert('Please fill in your name and email address.');
+        return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        alert('Please enter a valid email address.');
+        return;
+    }
+
+    // Save contact info
+    const contactInfo = {
+        name: name,
+        email: email,
+        phone: phone,
+        interest: interest,
+        timestamp: new Date().toISOString(),
+        source: 'Two Left Feet Studio Admin Panel'
+    };
+
+    try {
+        // Save to localStorage
+        let savedContacts = JSON.parse(localStorage.getItem('tlf_contact_submissions') || '[]');
+        savedContacts.push(contactInfo);
+        localStorage.setItem('tlf_contact_submissions', JSON.stringify(savedContacts));
+
+        // Show success message
+        alert(`✅ Thank you ${name}! Your contact information has been saved.\n\nWe'll follow up with you at ${email} soon!`);
+        
+        // Hide form and clear
+        hideContactForm();
+        
+        console.log('✅ Contact info saved:', contactInfo);
+
+    } catch (error) {
+        console.error('❌ Error saving contact info:', error);
+        alert('There was an error saving your information. Please try again or contact us directly.');
+    }
+}
+
+// View contact submissions
+function viewContactSubmissions() {
+    try {
+        const savedContacts = JSON.parse(localStorage.getItem('tlf_contact_submissions') || '[]');
+        
+        if (savedContacts.length === 0) {
+            alert('No contact submissions found.');
+            return;
+        }
+
+        // Create a simple display of contacts
+        let contactDisplay = `📧 Contact Submissions (${savedContacts.length} total):\n\n`;
+        
+        savedContacts.forEach((contact, index) => {
+            const date = new Date(contact.timestamp).toLocaleDateString();
+            contactDisplay += `${index + 1}. ${contact.name}\n`;
+            contactDisplay += `   Email: ${contact.email}\n`;
+            if (contact.phone) contactDisplay += `   Phone: ${contact.phone}\n`;
+            if (contact.interest) contactDisplay += `   Interest: ${contact.interest}\n`;
+            contactDisplay += `   Date: ${date}\n\n`;
+        });
+
+        // Show in alert (for simple viewing)
+        alert(contactDisplay);
+
+        // Also log to console for copying
+        console.log('📧 Contact Submissions:', savedContacts);
+        console.log('💡 Contact data is also logged to console for easy copying');
+
+    } catch (error) {
+        console.error('❌ Error loading contact submissions:', error);
+        alert('Error loading contact submissions.');
     }
 }
 
