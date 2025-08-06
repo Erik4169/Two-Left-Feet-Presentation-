@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Two Left Feet Studio</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/supabase-js/2.39.0/umd/supabase.min.js"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;600&family=Poppins:wght@300;400;500;600&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -750,9 +750,9 @@
     <script>
         // Configuration - Replace these with your actual Supabase values
         const SUPABASE_CONFIG = {
-            url: 'https://tftahystxwfglgvrnqna.supabase.co’,  // Replace with your Project URL
-            anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRmdGFoeXN0eHdmZ2xndnJucW5hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MTA3MDQsImV4cCI6MjA3MDA4NjcwNH0.wevbNJ9mhNwM2kS_MUfQzc9Xx2DT6U_NcgwwV69LQrA',  // Replace with your anon key
-            serviceKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRmdGFoeXN0eHdmZ2xndnJucW5hIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDUxMDcwNCwiZXhwIjoyMDcwMDg2NzA0fQ.URZ02i5NX1uk6ckiFzfH1O8kG5oEC2932bWxEbJt_yY'  // Replace with your service key
+            url: 'YOUR_PROJECT_URL_HERE',  // Replace with your Project URL
+            anonKey: 'YOUR_ANON_KEY_HERE',  // Replace with your anon key
+            serviceKey: 'YOUR_SERVICE_KEY_HERE'  // Replace with your service key
         };
 
         // Initialize Supabase
@@ -773,8 +773,8 @@
                 }
 
                 // Initialize Supabase clients
-                supabase = supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
-                adminSupabase = supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.serviceKey);
+                supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+                adminSupabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.serviceKey);
 
                 // Get presentation ID
                 const { data: presentations, error } = await supabase
@@ -786,13 +786,25 @@
                 if (error) throw error;
                 presentationId = presentations.id;
 
-                // Determine view mode
+                // Determine view mode - CHECK MULTIPLE WAYS
                 const urlParams = new URLSearchParams(window.location.search);
-                if (urlParams.get('admin') === 'twoleftfeet2024') {
+                const adminParam = urlParams.get('admin');
+                const displayParam = urlParams.get('display');
+                
+                console.log('URL Parameters:', {
+                    admin: adminParam,
+                    display: displayParam,
+                    fullURL: window.location.href
+                });
+
+                if (adminParam === 'twoleftfeet2024') {
+                    console.log('Loading ADMIN view');
                     showAdminView();
-                } else if (urlParams.get('display') === 'true') {
+                } else if (displayParam === 'true') {
+                    console.log('Loading DISPLAY view');
                     showDisplayView();
                 } else {
+                    console.log('Loading PARTICIPANT view');
                     showParticipantView();
                 }
 
