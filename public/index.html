@@ -1,1016 +1,1600 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Two Left Feet Studio - Interactive Presentation</title>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Nunito:wght@300;400;600;700&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
-<style>
-:root {
---teal: #20B2AA;
---sunshine-yellow: #FFD700;
---bubblegum-coral: #FF7F7F;
---soft-lilac: #DDA0DD;
---sky-blue: #87CEEB;
---dark-charcoal: #2F2F2F;
---white: #FFFFFF;
---light-gray: #F8F9FA;
-}
-* {
-margin: 0;
-padding: 0;
-box-sizing: border-box;
-}
-body {
-font-family: 'Nunito', sans-serif;
-background: linear-gradient(135deg, var(--light-gray) 0%, var(--white) 100%);
-min-height: 100vh;
-color: var(--dark-charcoal);
-}
-.container {
-max-width: 100%;
-margin: 0 auto;
-padding: 20px;
-min-height: 100vh;
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-}
-.logo {
-font-family: 'Fredoka One', cursive;
-font-size: 2.5rem;
-color: var(--teal);
-margin-bottom: 10px;
-text-align: center;
-animation: wiggle 2s ease-in-out infinite;
-}
-.tagline {
-font-family: 'Caveat', cursive;
-font-size: 1.2rem;
-color: var(--bubblegum-coral);
-margin-bottom: 30px;
-text-align: center;
-}
-.card {
-background: white;
-border-radius: 25px;
-padding: 30px;
-box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-width: 100%;
-max-width: 500px;
-text-align: center;
-position: relative;
-overflow: hidden;
-}
-.card::before {
-content: '♪ ♫ ♪';
-position: absolute;
-top: -10px;
-right: 20px;
-font-size: 1.5rem;
-color: var(--sunshine-yellow);
-opacity: 0.3;
-animation: float 3s ease-in-out infinite;
-}
-.welcome-screen {
-display: block;
-}
-.question-screen {
-display: none;
-}
-.admin-screen {
-display: none;
-}
-.results-screen {
-display: none;
-}
-h1 {
-font-family: 'Fredoka One', cursive;
-color: var(--teal);
-margin-bottom: 20px;
-font-size: 2rem;
-}
-h2 {
-font-family: 'Nunito', sans-serif;
-font-weight: 600;
-color: var(--dark-charcoal);
-margin-bottom: 15px;
-font-size: 1.3rem;
-}
-.name-input {
-width: 100%;
-padding: 15px;
-border: 3px solid var(--soft-lilac);
-border-radius: 15px;
-font-size: 1.1rem;
-font-family: 'Nunito', sans-serif;
-margin-bottom: 20px;
-transition: all 0.3s ease;
-}
-.name-input:focus {
-outline: none;
-border-color: var(--teal);
-transform: scale(1.02);
-}
-.btn {
-background: var(--teal);
-color: white;
-border: none;
-padding: 15px 30px;
-border-radius: 25px;
-font-size: 1.1rem;
-font-weight: 600;
-cursor: pointer;
-transition: all 0.3s ease;
-font-family: 'Nunito', sans-serif;
-position: relative;
-overflow: hidden;
-}
-.btn:hover {
-background: var(--bubblegum-coral);
-transform: translateY(-2px) rotate(1deg);
-box-shadow: 0 5px 15px rgba(255, 127, 127, 0.3);
-}
-.btn:active {
-transform: translateY(0) rotate(-1deg);
-}
-.option-btn {
-width: 100%;
-margin-bottom: 15px;
-background: var(--sky-blue);
-animation: slideIn 0.5s ease-out forwards;
-opacity: 0;
-}
-.option-btn:nth-child(1) { animation-delay: 0.1s; }
-.option-btn:nth-child(2) { animation-delay: 0.2s; }
-.option-btn:nth-child(3) { animation-delay: 0.3s; }
-.option-btn:nth-child(4) { animation-delay: 0.4s; }
-.option-btn:nth-child(5) { animation-delay: 0.5s; }
-.option-btn:hover {
-background: var(--sunshine-yellow);
-color: var(--dark-charcoal);
-}
-.text-input {
-width: 100%;
-padding: 15px;
-border: 3px solid var(--soft-lilac);
-border-radius: 15px;
-font-size: 1rem;
-font-family: 'Nunito', sans-serif;
-margin-bottom: 20px;
-min-height: 100px;
-resize: vertical;
-}
-.thank-you {
-background: var(--sunshine-yellow);
-color: var(--dark-charcoal);
-padding: 20px;
-border-radius: 15px;
-margin-bottom: 20px;
-font-weight: 600;
-animation: bounce 0.6s ease-out;
-}
-.results-chart {
-margin: 20px 0;
-}
-.result-bar {
-display: flex;
-align-items: center;
-margin-bottom: 10px;
-background: var(--light-gray);
-border-radius: 10px;
-overflow: hidden;
-position: relative;
-}
-.result-fill {
-height: 40px;
-background: var(--teal);
-transition: width 1s ease-out;
-display: flex;
-align-items: center;
-justify-content: flex-end;
-padding-right: 10px;
-color: white;
-font-weight: 600;
-}
-.result-label {
-position: absolute;
-left: 10px;
-color: var(--dark-charcoal);
-font-weight: 600;
-z-index: 2;
-}
-.dancing-feet {
-position: fixed;
-font-size: 2rem;
-animation: dance 4s linear infinite;
-opacity: 0.1;
-pointer-events: none;
-}
-.admin-panel {
-max-width: 800px;
-width: 100%;
-}
-.admin-form {
-background: white;
-padding: 30px;
-border-radius: 15px;
-margin-bottom: 20px;
-box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-.form-group {
-margin-bottom: 20px;
-}
-.form-group label {
-display: block;
-margin-bottom: 5px;
-font-weight: 600;
-color: var(--dark-charcoal);
-}
-.form-group input, .form-group select, .form-group textarea {
-width: 100%;
-padding: 10px;
-border: 2px solid var(--soft-lilac);
-border-radius: 8px;
-font-family: 'Nunito', sans-serif;
-}
-.options-container {
-border: 2px dashed var(--soft-lilac);
-padding: 15px;
-border-radius: 8px;
-margin-top: 10px;
-}
-.option-input {
-display: flex;
-margin-bottom: 10px;
-gap: 10px;
-}
-.add-option {
-background: var(--sunshine-yellow);
-color: var(--dark-charcoal);
-border: none;
-padding: 8px 15px;
-border-radius: 15px;
-cursor: pointer;
-font-size: 0.9rem;
-}
-.question-list {
-background: white;
-border-radius: 15px;
-padding: 20px;
-margin-top: 20px;
-}
-.question-item {
-background: var(--light-gray);
-padding: 15px;
-border-radius: 10px;
-margin-bottom: 10px;
-display: flex;
-justify-content: space-between;
-align-items: center;
-}
-.delete-btn {
-background: var(--bubblegum-coral);
-color: white;
-border: none;
-padding: 5px 10px;
-border-radius: 5px;
-cursor: pointer;
-}
-.current-slide {
-background: var(--teal);
-color: white;
-padding: 10px;
-border-radius: 10px;
-margin-bottom: 20px;
-text-align: center;
-font-weight: 600;
-}
-.sync-status {
-background: var(--sunshine-yellow);
-color: var(--dark-charcoal);
-padding: 8px 15px;
-border-radius: 8px;
-font-size: 0.9rem;
-margin-bottom: 15px;
-text-align: center;
-}
-@keyframes wiggle {
-0%, 100% { transform: rotate(0deg); }
-25% { transform: rotate(2deg); }
-75% { transform: rotate(-2deg); }
-}
-@keyframes float {
-0%, 100% { transform: translateY(0px); }
-50% { transform: translateY(-10px); }
-}
-@keyframes slideIn {
-from {
-opacity: 0;
-transform: translateX(-50px);
-}
-to {
-opacity: 1;
-transform: translateX(0);
-}
-}
-@keyframes bounce {
-0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-40% { transform: translateY(-10px); }
-60% { transform: translateY(-5px); }
-}
-@keyframes dance {
-0% { transform: translateX(-100px) rotate(0deg); }
-25% { transform: translateX(25vw) rotate(180deg); }
-50% { transform: translateX(50vw) rotate(360deg); }
-75% { transform: translateX(75vw) rotate(540deg); }
-100% { transform: translateX(100vw) rotate(720deg); }
-}
-@media (max-width: 600px) {
-.container {
-padding: 10px;
-}
-.logo {
-font-size: 2rem;
-}
-.card {
-padding: 20px;
-}
-h1 {
-font-size: 1.5rem;
-}
-}
-.loading {
-display: flex;
-justify-content: center;
-align-items: center;
-gap: 5px;
-margin: 20px 0;
-}
-.loading-dot {
-width: 10px;
-height: 10px;
-background: var(--teal);
-border-radius: 50%;
-animation: loadingBounce 1.4s ease-in-out infinite both;
-}
-.loading-dot:nth-child(1) { animation-delay: -0.32s; }
-.loading-dot:nth-child(2) { animation-delay: -0.16s; }
-@keyframes loadingBounce {
-0%, 80%, 100% {
-transform: scale(0);
-} 40% {
-transform: scale(1.0);
-}
-}
-/* Debug info styles */
-.debug-info {
-position: fixed;
-bottom: 10px;
-left: 10px;
-background: rgba(0,0,0,0.8);
-color: white;
-padding: 10px;
-border-radius: 5px;
-font-size: 0.8rem;
-font-family: monospace;
-z-index: 1000;
-max-width: 300px;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Two Left Feet Studio</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/supabase-js/2.39.0/umd/supabase.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;600&family=Poppins:wght@300;400;500;600&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --teal: #20B2AA;
+            --yellow: #FFD700;
+            --coral: #FF6B8A;
+            --lilac: #DDA0DD;
+            --charcoal: #2C3E50;
+            --white: #FFFFFF;
+            --light-gray: #F8F9FA;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--light-gray) 0%, #E8F4F8 100%);
+            min-height: 100vh;
+            color: var(--charcoal);
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .admin-container {
+            max-width: 1000px;
+        }
+
+        .display-container {
+            max-width: 100vw;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 2.5em;
+            font-weight: 600;
+            color: var(--teal);
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5em;
+            color: var(--coral);
+            font-weight: 600;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .welcome-text {
+            text-align: center;
+            font-size: 1.3em;
+            color: var(--charcoal);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--charcoal);
+        }
+
+        .input-group input, .input-group select, .input-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #E0E0E0;
+            border-radius: 12px;
+            font-size: 1em;
+            font-family: 'Poppins', sans-serif;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus {
+            outline: none;
+            border-color: var(--teal);
+        }
+
+        .btn {
+            background: var(--teal);
+            color: var(--white);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: #1A9B96;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--coral);
+        }
+
+        .btn-secondary:hover {
+            background: #FF5577;
+        }
+
+        .btn-yellow {
+            background: var(--yellow);
+            color: var(--charcoal);
+        }
+
+        .btn-yellow:hover {
+            background: #FFC700;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 0.9em;
+        }
+
+        .poll-options {
+            display: grid;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .poll-option {
+            background: var(--light-gray);
+            border: 2px solid #E0E0E0;
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .poll-option:hover {
+            border-color: var(--teal);
+            background: #E8F4F8;
+        }
+
+        .poll-option.selected {
+            background: var(--teal);
+            color: var(--white);
+            border-color: var(--teal);
+        }
+
+        .results-container {
+            margin-top: 30px;
+        }
+
+        .result-item {
+            margin-bottom: 20px;
+        }
+
+        .result-label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .result-bar {
+            height: 30px;
+            background: var(--light-gray);
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .result-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--teal) 0%, var(--coral) 100%);
+            border-radius: 15px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+
+        .result-percentage {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--white);
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .floating-contact {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--coral);
+            color: var(--white);
+            border: none;
+            border-radius: 50px;
+            padding: 12px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(255, 107, 138, 0.4);
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9em;
+            z-index: 1000;
+        }
+
+        .floating-contact:hover {
+            background: #FF5577;
+            transform: translateY(-2px);
+        }
+
+        .admin-header {
+            background: var(--charcoal);
+            color: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .admin-title {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .admin-subtitle {
+            opacity: 0.8;
+        }
+
+        .admin-section {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .admin-section h3 {
+            font-family: 'Fredoka', sans-serif;
+            color: var(--teal);
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .question-form {
+            display: grid;
+            gap: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .options-container {
+            border: 2px dashed #E0E0E0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+
+        .option-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .option-item input {
+            flex: 1;
+        }
+
+        .questions-list {
+            margin-top: 30px;
+        }
+
+        .question-item {
+            background: var(--light-gray);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 2px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+
+        .question-item:hover {
+            border-color: var(--teal);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .question-title {
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-right: 10px;
+        }
+
+        .question-type {
+            background: var(--teal);
+            color: var(--white);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+
+        .question-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .navigation-controls {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background: rgba(44, 62, 80, 0.8);
+            color: var(--white);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .nav-btn:hover {
+            background: var(--charcoal);
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-connected {
+            background: #4CAF50;
+        }
+
+        .status-disconnected {
+            background: #F44336;
+        }
+
+        .display-results {
+            font-size: 1.5em;
+        }
+
+        .display-results .result-bar {
+            height: 50px;
+        }
+
+        .display-results .result-label {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+
+        .display-question {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 40px;
+            color: var(--charcoal);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .card {
+                padding: 20px;
+                margin-bottom: 15px;
+            }
+
+            .logo {
+                font-size: 2em;
+            }
+
+            .tagline {
+                font-size: 1.2em;
+            }
+
+            .welcome-text {
+                font-size: 1.1em;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .question-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .question-actions {
+                flex-wrap: wrap;
+            }
+
+            .display-question {
+                font-size: 1.8em;
+                margin-bottom: 30px;
+            }
+
+            .floating-contact {
+                bottom: 15px;
+                right: 15px;
+                padding: 10px 16px;
+                font-size: 0.85em;
+            }
+
+            .navigation-controls {
+                bottom: 15px;
+                left: 15px;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .nav-btn {
+                padding: 8px 12px;
+                font-size: 0.8em;
+            }
+
+            .admin-container {
+                max-width: 100%;
+                padding: 10px;
+            }
+
+            .admin-section {
+                padding: 20px;
+            }
+
+            .btn {
+                padding: 12px 24px;
+                font-size: 1em;
+            }
+
+            .input-group input, .input-group select, .input-group textarea {
+                padding: 12px;
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+
+            .poll-option {
+                padding: 12px;
+                font-size: 1em;
+            }
+
+            .result-bar {
+                height: 25px;
+            }
+
+            .display-results .result-bar {
+                height: 40px;
+            }
+
+            .question-item {
+                padding: 15px;
+            }
+
+            .option-item {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .option-item input {
+                margin-bottom: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.8em;
+            }
+
+            .tagline {
+                font-size: 1.1em;
+            }
+
+            .display-question {
+                font-size: 1.5em;
+            }
+
+            .floating-contact {
+                position: fixed;
+                bottom: 10px;
+                right: 10px;
+                left: 10px;
+                border-radius: 12px;
+                text-align: center;
+            }
+
+            .navigation-controls {
+                bottom: 70px; /* Above the contact button */
+                left: 10px;
+                right: 10px;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+
+            .card {
+                border-radius: 15px;
+                padding: 18px;
+            }
+
+            .admin-section {
+                padding: 15px;
+                border-radius: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
-<!-- Dancing feet background elements -->
-<div class="dancing-feet" style="top: 10%; left: 0;">🦶</div>
-<div class="dancing-feet" style="top: 30%; left: 0; animation-delay: -1s;">🦶</div>
-<div class="dancing-feet" style="top: 50%; left: 0; animation-delay: -2s;">🦶</div>
-<div class="dancing-feet" style="top: 70%; left: 0; animation-delay: -3s;">🦶</div>
+    <!-- Participant View -->
+    <div id="participantView" class="container">
+        <div class="header">
+            <div class="logo">🩰 Two Left Feet Studio</div>
+            <div class="tagline">Get ready to wiggle, wobble, and shine with us!</div>
+        </div>
 
-<div class="container">
-<!-- Welcome Screen -->
-<div id="welcomeScreen" class="welcome-screen">
-<div class="card">
-<div class="logo">Two Left Feet Studio</div>
-<div class="tagline">Dancing twice as hard with two left feet!</div>
-<h2>Welcome to our Interactive Presentation!</h2>
-<p style="margin-bottom: 20px; color: var(--dark-charcoal);">
-Get ready to wiggle, wobble, and shine with us!
-<br><br>
-Enter your name to join the fun (optional):
-</p>
-<input type="text" id="participantName" class="name-input" placeholder="Your name (or stay anonymous!)">
-<button class="btn" onclick="joinPresentation()">
-Let's Dance! 🎵
-</button>
-<div class="loading" id="loadingIndicator" style="display: none;">
-<div class="loading-dot"></div>
-<div class="loading-dot"></div>
-<div class="loading-dot"></div>
-</div>
-</div>
-</div>
+        <!-- Welcome Screen -->
+        <div id="welcomeScreen" class="card">
+            <div class="welcome-text">
+                Welcome to our interactive presentation! Join the fun and let your voice be heard.
+            </div>
+            <div class="input-group">
+                <label for="participantName">Enter your name to join the fun (optional):</label>
+                <input type="text" id="participantName" placeholder="Your name here...">
+            </div>
+            <button class="btn" onclick="joinPresentation()">Let's Dance! 🕺💃</button>
+        </div>
 
-<!-- Question Screen -->
-<div id="questionScreen" class="question-screen">
-<div class="card">
-<div class="logo">Two Left Feet Studio</div>
-<div id="questionContent">
-<!-- Dynamic content will be inserted here -->
-</div>
-<div id="thankYouMessage" style="display: none;">
-<div class="thank-you">
-<h2>Mistakes make magic! ✨</h2>
-<p>Thanks for sharing your thoughts!</p>
-</div>
-</div>
-<div id="resultsContent" style="display: none;">
-<!-- Results will be shown here -->
-</div>
-</div>
-</div>
+        <!-- Waiting Screen -->
+        <div id="waitingScreen" class="card hidden">
+            <div class="welcome-text">
+                <span id="welcomeMessage">Welcome! </span>We're getting ready for the next interaction. Stay tuned!
+            </div>
+            <div style="text-align: center; margin-top: 30px;">
+                <div style="font-size: 3em;">🎪</div>
+                <p style="margin-top: 15px; color: var(--coral); font-weight: 500;">Waiting for the next question...</p>
+            </div>
+        </div>
 
-<!-- Admin Panel -->
-<div id="adminScreen" class="admin-screen">
-<div class="admin-panel">
-<div class="card">
-<div class="logo">Admin Panel</div>
-<div class="tagline">Every stumble starts with a plan!</div>
-<div class="sync-status" id="syncStatus">🎯 Google Slides sync ready</div>
-<div class="current-slide" id="currentSlideDisplay">Current Slide: None</div>
-<div class="admin-form">
-<h2>Create New Interactive Element</h2>
-<div class="form-group">
-<label for="slideId">Slide Identifier:</label>
-<input type="text" id="slideId" placeholder="e.g., Poll 1, Q&A 2, Vote 3">
-</div>
-<div class="form-group">
-<label for="elementType">Type:</label>
-<select id="elementType" onchange="updateFormFields()">
-<option value="poll">Multiple Choice Poll</option>
-<option value="question">Open Text Question</option>
-<option value="vote">Voting</option>
-<option value="info">Information Display</option>
-</select>
-</div>
-<div class="form-group">
-<label for="elementTitle">Title/Question:</label>
-<textarea id="elementTitle" rows="3" placeholder="Enter your question or information..."></textarea>
-</div>
-<div id="optionsContainer" class="options-container">
-<label>Answer Options:</label>
-<div id="optionsList">
-<div class="option-input">
-<input type="text" placeholder="Option 1" class="option-text">
-<button type="button" class="delete-btn" onclick="removeOption(this)">×</button>
-</div>
-<div class="option-input">
-<input type="text" placeholder="Option 2" class="option-text">
-<button type="button" class="delete-btn" onclick="removeOption(this)">×</button>
-</div>
-</div>
-<button type="button" class="add-option" onclick="addOption()">+ Add Option</button>
-</div>
-<button class="btn" onclick="saveElement()">Save Element</button>
-</div>
-<div class="question-list">
-<h2>Saved Elements</h2>
-<div id="savedElements">
-<!-- Saved elements will appear here -->
-</div>
-</div>
-<div class="admin-form">
-<h2>Live Results</h2>
-<div id="liveResults">
-<p>No active poll or vote</p>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
+        <!-- Question Screen -->
+        <div id="questionScreen" class="card hidden">
+            <h2 id="questionTitle" style="color: var(--teal); margin-bottom: 20px;"></h2>
+            <p id="questionText" style="font-size: 1.2em; margin-bottom: 25px;"></p>
+            
+            <!-- Poll Options -->
+            <div id="pollOptions" class="poll-options hidden"></div>
+            
+            <!-- Text Input -->
+            <div id="textInput" class="input-group hidden">
+                <textarea id="textResponse" placeholder="Share your thoughts..." rows="4"></textarea>
+            </div>
+            
+            <!-- Submit Button -->
+            <button id="submitBtn" class="btn" onclick="submitResponse()">Submit Response</button>
+            
+            <!-- Results -->
+            <div id="results" class="results-container hidden">
+                <h3 style="color: var(--teal); margin-bottom: 20px;">Live Results:</h3>
+                <div id="resultsContent"></div>
+            </div>
+        </div>
 
-<!-- Debug Info (remove in production) -->
-<div class="debug-info" id="debugInfo" style="display: none;">
-<div>Elements: <span id="debugElements">0</span></div>
-<div>Current: <span id="debugSlide">None</span></div>
-<div>Status: <span id="debugStatus">Loading...</span></div>
-</div>
+        <!-- Contact Screen -->
+        <div id="contactScreen" class="card hidden">
+            <h2 style="color: var(--coral); margin-bottom: 20px;">Stay Connected! 📧</h2>
+            <p style="margin-bottom: 25px;">We'd love to keep in touch and share more about our dance programs.</p>
+            
+            <div class="input-group">
+                <label for="contactName">Name *</label>
+                <input type="text" id="contactName" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="contactEmail">Email *</label>
+                <input type="email" id="contactEmail" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="contactStudio">Preferred Studio Location *</label>
+                <input type="text" id="contactStudio" placeholder="e.g., Downtown, Suburbs, Online" required>
+            </div>
+            
+            <button class="btn btn-secondary" onclick="submitContact()">Join Our Dance Family! 💃</button>
+            <button class="btn btn-yellow" onclick="closeContact()">Maybe Later</button>
+        </div>
 
-<script>
-// Global variables
-let currentUser = '';
-let currentSlide = '';
-let presentationElements = {};
-let responses = {};
-let isAdmin = false;
+        <!-- Navigation Controls -->
+        <div class="navigation-controls">
+            <button class="nav-btn" onclick="previousQuestion()">⬅ Previous</button>
+            <button class="nav-btn" onclick="nextQuestion()">Next ➡</button>
+        </div>
 
-// Enhanced debugging
-function updateDebugInfo() {
-const debugInfo = document.getElementById('debugInfo');
-if (debugInfo && window.location.search.includes('debug=true')) {
-debugInfo.style.display = 'block';
-document.getElementById('debugElements').textContent = Object.keys(presentationElements).length;
-document.getElementById('debugSlide').textContent = currentSlide || 'None';
-document.getElementById('debugStatus').textContent = isAdmin ? 'Admin Mode' : 'Participant Mode';
-}
-}
+        <!-- Floating Contact Button -->
+        <button class="floating-contact" onclick="showContact()">Add Contact</button>
+    </div>
 
-// API endpoint handler for Google Slides sync
-function handleApiRequest() {
-const urlParams = new URLSearchParams(window.location.search);
-const slideName = urlParams.get('slideName');
-if (slideName) {
-// This is an API sync request from Google Slides
-console.log('🎯 Received slide sync:', slideName);
+    <!-- Admin Panel -->
+    <div id="adminView" class="container admin-container hidden">
+        <div class="admin-header">
+            <div class="admin-title">🩰 Admin Panel</div>
+            <div class="admin-subtitle">Two Left Feet Studio Presentation Control</div>
+            <div style="margin-top: 10px;">
+                <span class="status-indicator status-disconnected" id="connectionStatus"></span>
+                <span id="connectionText">Connecting to database...</span>
+            </div>
+        </div>
 
-// Update current slide
-currentSlide = slideName;
-localStorage.setItem('tlf_current_slide', slideName);
+        <!-- Create Question Section -->
+        <div class="admin-section">
+            <h3>Create New Question</h3>
+            <form class="question-form" id="questionForm">
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="questionType">Question Type</label>
+                        <select id="questionType" onchange="toggleQuestionOptions()">
+                            <option value="poll">Poll (Multiple Choice)</option>
+                            <option value="text">Text Response</option>
+                            <option value="info">Information Display</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="questionOrder">Display Order</label>
+                        <input type="number" id="questionOrder" min="1" value="1">
+                    </div>
+                </div>
 
-// Update admin display if in admin mode
-if (isAdmin) {
-document.getElementById('currentSlideDisplay').textContent = `Current Slide: ${slideName}`;
-updateSyncStatus(`✅ Synced: ${slideName}`);
-} else {
-// Update participant view
-handleSlideChange(slideName);
-}
-updateDebugInfo();
-// Return success response (for Google Apps Script)
-return { success: true, slide: slideName, timestamp: new Date().toISOString() };
-}
-return null;
-}
+                <div class="input-group">
+                    <label for="questionTitleInput">Question Title (matches slide title)</label>
+                    <input type="text" id="questionTitleInput" placeholder="e.g., Poll 1, Q&A 2, Vote 3" required>
+                </div>
 
-// Update sync status in admin panel
-function updateSyncStatus(message) {
-const statusEl = document.getElementById('syncStatus');
-if (statusEl) {
-statusEl.textContent = message;
-// Reset to default after 3 seconds
-setTimeout(() => {
-statusEl.textContent = '🎯 Google Slides sync ready';
-}, 3000);
-}
-}
+                <div class="input-group">
+                    <label for="questionTextInput">Question Text</label>
+                    <textarea id="questionTextInput" placeholder="Enter your question or information here..." rows="3" required></textarea>
+                </div>
 
-// Check for admin access
-function checkAdminAccess() {
-const urlParams = new URLSearchParams(window.location.search);
-const adminKey = urlParams.get('admin');
-if (adminKey === 'twoleftfeet2024') {
-isAdmin = true;
-showAdminPanel();
-return true;
-}
-return false;
-}
+                <!-- Poll Options -->
+                <div id="pollOptionsContainer" class="options-container">
+                    <label>Answer Options</label>
+                    <div id="optionsList">
+                        <div class="option-item">
+                            <input type="text" placeholder="Option 1" class="option-input">
+                            <button type="button" class="btn btn-secondary btn-small" onclick="removeOption(this)">Remove</button>
+                        </div>
+                        <div class="option-item">
+                            <input type="text" placeholder="Option 2" class="option-input">
+                            <button type="button" class="btn btn-secondary btn-small" onclick="removeOption(this)">Remove</button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-yellow btn-small" onclick="addOption()">Add Option</button>
+                </div>
 
-// Initialize the app
-function init() {
-console.log('🚀 Initializing Two Left Feet Studio app...');
-// Check if this is an API sync request first
-const apiResponse = handleApiRequest();
-if (apiResponse) {
-// This was an API request, don't show normal UI
-console.log('📡 API sync request handled');
-return;
-}
+                <button type="submit" class="btn">Save Question</button>
+            </form>
+        </div>
 
-if (checkAdminAccess()) {
-console.log('👑 Admin mode activated');
-return;
-}
+        <!-- Current Question Status -->
+        <div class="admin-section">
+            <h3>Current Status</h3>
+            <div id="currentQuestionStatus">
+                <p><strong>Active Question:</strong> <span id="activeQuestionTitle">None</span></p>
+                <p><strong>Response Count:</strong> <span id="responseCount">0</span></p>
+                <button class="btn btn-secondary" onclick="refreshCurrentQuestion()">Refresh Status</button>
+            </div>
+        </div>
 
-// Load any existing presentation elements
-loadPresentationElements();
-updateDebugInfo();
+        <!-- Saved Questions -->
+        <div class="admin-section">
+            <h3>Saved Questions</h3>
+            <div id="questionsList" class="questions-list">
+                <!-- Questions will be populated here -->
+            </div>
+            <button class="btn btn-yellow" onclick="loadQuestions()">Refresh Questions</button>
+        </div>
 
-// Start polling for slide changes
-pollForSlideChanges();
-console.log('✅ App initialization complete');
-}
+        <!-- Export Data -->
+        <div class="admin-section">
+            <h3>Export Data</h3>
+            <button class="btn btn-secondary" onclick="exportContacts()">Export Contacts (CSV)</button>
+            <button class="btn btn-yellow" onclick="exportResponses()">Export All Responses (CSV)</button>
+        </div>
+    </div>
 
-// Join the presentation
-function joinPresentation() {
-const nameInput = document.getElementById('participantName');
-currentUser = nameInput.value.trim() || 'Anonymous Dancer';
-console.log(`👋 ${currentUser} joined the presentation`);
-document.getElementById('loadingIndicator').style.display = 'flex';
-setTimeout(() => {
-document.getElementById('welcomeScreen').style.display = 'none';
-document.getElementById('questionScreen').style.display = 'block';
-showWaitingMessage();
-}, 1000);
-}
+    <!-- Display Panel -->
+    <div id="displayView" class="container display-container hidden">
+        <div class="header">
+            <div class="logo" style="font-size: 4em;">🩰 Two Left Feet Studio</div>
+        </div>
 
-// Show waiting message
-function showWaitingMessage() {
-const content = document.getElementById('questionContent');
-content.innerHTML = `
-<h1>Ready to Dance! 🕺</h1>
-<p style="font-size: 1.1rem; margin-bottom: 20px;">
-Hey ${currentUser}! We're warming up...
-</p>
-<p style="color: var(--bubblegum-coral); font-family: 'Caveat', cursive; font-size: 1.2rem;">
-"Every sparkle starts with a stumble" ✨
-</p>
-<div class="loading">
-<div class="loading-dot"></div>
-<div class="loading-dot"></div>
-<div class="loading-dot"></div>
-</div>
-`;
-}
+        <div id="displayContent" class="card">
+            <div id="displayQuestion" class="display-question">Waiting for next question...</div>
+            <div id="displayResults" class="results-container display-results hidden"></div>
+        </div>
+    </div>
 
-// Show admin panel
-function showAdminPanel() {
-document.getElementById('welcomeScreen').style.display = 'none';
-document.getElementById('questionScreen').style.display = 'none';
-document.getElementById('adminScreen').style.display = 'block';
-loadSavedElements();
-updateFormFields();
-// Load current slide if available
-const currentSlideFromStorage = localStorage.getItem('tlf_current_slide');
-if (currentSlideFromStorage) {
-document.getElementById('currentSlideDisplay').textContent = `Current Slide: ${currentSlideFromStorage}`;
-}
-updateDebugInfo();
-}
+    <script>
+        // Configuration - Replace these with your actual Supabase values
+        const SUPABASE_CONFIG = {
+            url: 'https://tftahystxwfglgvrnqna.supabase.co’,  // Replace with your Project URL
+            anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRmdGFoeXN0eHdmZ2xndnJucW5hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MTA3MDQsImV4cCI6MjA3MDA4NjcwNH0.wevbNJ9mhNwM2kS_MUfQzc9Xx2DT6U_NcgwwV69LQrA',  // Replace with your anon key
+            serviceKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRmdGFoeXN0eHdmZ2xndnJucW5hIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDUxMDcwNCwiZXhwIjoyMDcwMDg2NzA0fQ.URZ02i5NX1uk6ckiFzfH1O8kG5oEC2932bWxEbJt_yY'  // Replace with your service key
+        };
 
-// Update form fields based on element type
-function updateFormFields() {
-const elementType = document.getElementById('elementType').value;
-const optionsContainer = document.getElementById('optionsContainer');
-if (elementType === 'info' || elementType === 'question') {
-optionsContainer.style.display = 'none';
-} else {
-optionsContainer.style.display = 'block';
-}
-}
+        // Initialize Supabase
+        let supabase;
+        let adminSupabase;
+        let presentationId;
+        let currentUser = null;
+        let currentQuestion = null;
+        let hasSubmittedResponse = false;
 
-// Add option input
-function addOption() {
-const optionsList = document.getElementById('optionsList');
-const optionCount = optionsList.children.length + 1;
-if (optionCount <= 5) {
-const optionDiv = document.createElement('div');
-optionDiv.className = 'option-input';
-optionDiv.innerHTML = `
-<input type="text" placeholder="Option ${optionCount}" class="option-text">
-<button type="button" class="delete-btn" onclick="removeOption(this)">×</button>
-`;
-optionsList.appendChild(optionDiv);
-}
-}
+        // Initialize the app
+        async function initializeApp() {
+            try {
+                // Check if configuration is set
+                if (SUPABASE_CONFIG.url === 'YOUR_PROJECT_URL_HERE') {
+                    alert('Please configure your Supabase credentials in the code before using the app!');
+                    return;
+                }
 
-// Remove option input
-function removeOption(button) {
-const optionsList = document.getElementById('optionsList');
-if (optionsList.children.length > 2) {
-button.parentElement.remove();
-}
-}
+                // Initialize Supabase clients
+                supabase = supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+                adminSupabase = supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.serviceKey);
 
-// Save element
-function saveElement() {
-const slideId = document.getElementById('slideId').value.trim();
-const elementType = document.getElementById('elementType').value;
-const title = document.getElementById('elementTitle').value.trim();
+                // Get presentation ID
+                const { data: presentations, error } = await supabase
+                    .from('presentations')
+                    .select('id')
+                    .eq('is_active', true)
+                    .single();
 
-if (!slideId || !title) {
-alert('Please fill in the slide identifier and title/question.');
-return;
-}
+                if (error) throw error;
+                presentationId = presentations.id;
 
-const element = {
-id: slideId,
-type: elementType,
-title: title,
-options: [],
-responses: []
-};
+                // Determine view mode
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('admin') === 'twoleftfeet2024') {
+                    showAdminView();
+                } else if (urlParams.get('display') === 'true') {
+                    showDisplayView();
+                } else {
+                    showParticipantView();
+                }
 
-// Only collect options for polls and votes, not for open questions or info
-if (elementType !== 'info' && elementType !== 'question') {
-const optionInputs = document.querySelectorAll('.option-text');
-optionInputs.forEach(input => {
-if (input.value.trim()) {
-element.options.push(input.value.trim());
-}
-});
+                // Set up real-time sync
+                setupRealTimeSync();
 
-if (element.options.length < 2) {
-alert('Please provide at least 2 options for polls and votes.');
-return;
-}
-}
+                console.log('App initialized successfully');
+            } catch (error) {
+                console.error('Failed to initialize app:', error);
+                alert('Failed to connect to database. Please check your internet connection and try refreshing the page.');
+            }
+        }
 
-presentationElements[slideId] = element;
-savePresentationElements();
-loadSavedElements();
-updateDebugInfo();
+        // Show different views
+        function showParticipantView() {
+            document.getElementById('participantView').classList.remove('hidden');
+            document.getElementById('adminView').classList.add('hidden');
+            document.getElementById('displayView').classList.add('hidden');
+        }
 
-// Clear form
-document.getElementById('slideId').value = '';
-document.getElementById('elementTitle').value = '';
-document.querySelectorAll('.option-text').forEach(input => input.value = '');
-alert('Element saved successfully!');
-}
+        function showAdminView() {
+            document.getElementById('participantView').classList.add('hidden');
+            document.getElementById('adminView').classList.remove('hidden');
+            document.getElementById('displayView').classList.add('hidden');
+            
+            updateConnectionStatus(true);
+            loadQuestions();
+            refreshCurrentQuestion();
+        }
 
-// Load saved elements in admin panel
-function loadSavedElements() {
-const container = document.getElementById('savedElements');
-container.innerHTML = '';
+        function showDisplayView() {
+            document.getElementById('participantView').classList.add('hidden');
+            document.getElementById('adminView').classList.add('hidden');
+            document.getElementById('displayView').classList.remove('hidden');
+        }
 
-Object.values(presentationElements).forEach(element => {
-const elementDiv = document.createElement('div');
-elementDiv.className = 'question-item';
-elementDiv.innerHTML = `
-<div>
-<strong>${element.id}</strong> (${element.type})<br>
-<small>${element.title}</small>
-</div>
-<button class="delete-btn" onclick="deleteElement('${element.id}')">Delete</button>
-`;
-container.appendChild(elementDiv);
-});
-}
+        // Real-time synchronization
+        function setupRealTimeSync() {
+            // Listen for sync state changes
+            supabase
+                .channel('sync_state')
+                .on('postgres_changes', 
+                    { event: '*', schema: 'public', table: 'sync_state' },
+                    handleSyncChange
+                )
+                .subscribe();
 
-// Delete element
-function deleteElement(slideId) {
-if (confirm('Are you sure you want to delete this element?')) {
-delete presentationElements[slideId];
-savePresentationElements();
-loadSavedElements();
-updateDebugInfo();
-}
-}
+            // Listen for new responses
+            supabase
+                .channel('responses')
+                .on('postgres_changes',
+                    { event: 'INSERT', schema: 'public', table: 'responses' },
+                    handleNewResponse
+                )
+                .subscribe();
+        }
 
-// FIXED: Enhanced save function that handles both formats
-function savePresentationElements() {
-try {
-const dataToSave = {
-elements: presentationElements,
-timestamp: new Date().toISOString(),
-version: '1.0'
-};
-// Save in the enhanced format (compatible with admin panel)
-localStorage.setItem('tlf_presentation_elements', JSON.stringify(dataToSave));
-console.log(`💾 Saved ${Object.keys(presentationElements).length} presentation elements`);
-} catch (error) {
-console.error('❌ Error saving presentation elements:', error);
-alert('Warning: Could not save your questions. Please try again.');
-}
-}
+        async function handleSyncChange(payload) {
+            console.log('Sync state changed:', payload);
+            
+            if (payload.new && payload.new.current_question_id) {
+                await loadCurrentQuestion(payload.new.current_question_id);
+            }
+        }
 
-// FIXED: Enhanced load function that handles both old and new formats
-function loadPresentationElements() {
-try {
-// Try both possible storage locations
-let saved = localStorage.getItem('tlf_presentation_elements');
-if (!saved) {
-saved = localStorage.getItem('tlf_presentation_elements_backup');
-console.log('📦 Loaded from backup storage');
-}
+        function handleNewResponse(payload) {
+            console.log('New response received:', payload);
+            if (currentQuestion && payload.new.question_id === currentQuestion.id) {
+                loadQuestionResults(currentQuestion.id);
+            }
+        }
 
-if (saved) {
-const data = JSON.parse(saved);
+        // Participant functions
+        function joinPresentation() {
+            const name = document.getElementById('participantName').value.trim();
+            currentUser = name || 'Anonymous';
+            
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('waitingScreen').classList.remove('hidden');
+            document.getElementById('welcomeMessage').textContent = name ? `Welcome, ${name}! ` : 'Welcome! ';
+            
+            // Check for current question
+            checkCurrentQuestion();
+        }
 
-// Handle both old format (direct object) and new format (with metadata)
-if (data.elements && typeof data.elements === 'object') {
-// New format with metadata
-presentationElements = data.elements;
-console.log(`✅ Loaded ${Object.keys(data.elements).length} elements from ${data.timestamp || 'unknown date'}`);
-} else if (typeof data === 'object' && data !== null) {
-// Old format compatibility (direct object)
-presentationElements = data;
-console.log(`✅ Loaded ${Object.keys(data).length} elements (legacy format)`);
-} else {
-throw new Error('Invalid data format');
-}
-} else {
-console.log('📝 No saved elements found - starting fresh');
-presentationElements = {};
-}
-} catch (error) {
-console.error('❌ Error loading presentation elements:', error);
-console.log('🔄 Starting with empty element list');
-presentationElements = {};
-}
-}
+        async function checkCurrentQuestion() {
+            try {
+                const { data, error } = await supabase
+                    .from('sync_state')
+                    .select('current_question_id')
+                    .eq('presentation_id', presentationId)
+                    .single();
 
-// Poll for slide changes (enhanced for Google Slides integration)
-function pollForSlideChanges() {
-if (isAdmin) return;
+                if (data && data.current_question_id) {
+                    await loadCurrentQuestion(data.current_question_id);
+                }
+            } catch (error) {
+                console.log('No current question found');
+            }
+        }
 
-setInterval(() => {
-const newSlide = localStorage.getItem('tlf_current_slide');
-if (newSlide && newSlide !== currentSlide) {
-console.log(`🔄 Slide changed: ${currentSlide} → ${newSlide}`);
-currentSlide = newSlide;
-handleSlideChange(currentSlide);
-updateDebugInfo();
-}
-}, 1000); // Check more frequently for better responsiveness
-}
+        async function loadCurrentQuestion(questionId) {
+            try {
+                const { data: question, error } = await supabase
+                    .from('questions')
+                    .select('*')
+                    .eq('id', questionId)
+                    .single();
 
-// Handle slide change
-function handleSlideChange(slideName) {
-console.log('🎯 Handling slide change to:', slideName);
-if (isAdmin) {
-document.getElementById('currentSlideDisplay').textContent = `Current Slide: ${slideName}`;
-return;
-}
+                if (error) throw error;
 
-const element = presentationElements[slideName];
-console.log(`🔍 Looking for element "${slideName}":`, element ? 'Found!' : 'Not found');
-console.log(`📊 Available elements:`, Object.keys(presentationElements));
+                currentQuestion = question;
+                hasSubmittedResponse = false;
+                showQuestion(question);
+                
+                // Load existing results
+                await loadQuestionResults(questionId);
+                
+            } catch (error) {
+                console.error('Error loading current question:', error);
+            }
+        }
 
-if (element) {
-displayInteractiveElement(element);
-} else {
-showWaitingMessage();
-}
-}
+        function showQuestion(question) {
+            // Hide other screens
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('waitingScreen').classList.add('hidden');
+            document.getElementById('contactScreen').classList.add('hidden');
+            document.getElementById('questionScreen').classList.remove('hidden');
 
-// Display interactive element
-function displayInteractiveElement(element) {
-console.log(`🎨 Displaying interactive element: ${element.id} (${element.type})`);
-const content = document.getElementById('questionContent');
-document.getElementById('thankYouMessage').style.display = 'none';
-document.getElementById('resultsContent').style.display = 'none';
+            // Populate question content
+            document.getElementById('questionTitle').textContent = question.title;
+            document.getElementById('questionText').textContent = question.question_text;
 
-let html = `<h1>${element.title}</h1>`;
+            // Reset form
+            document.getElementById('results').classList.add('hidden');
+            document.getElementById('submitBtn').style.display = 'block';
 
-if (element.type === 'info') {
-html += `<p style="font-size: 1.1rem; margin: 20px 0;">${element.title}</p>`;
-} else if (element.type === 'question') {
-html += `
-<textarea id="textResponse" class="text-input" placeholder="Share your thoughts..."></textarea>
-<button class="btn" onclick="submitTextResponse('${element.id}')">
-Submit Response 📝
-</button>
-`;
-} else {
-element.options.forEach((option, index) => {
-html += `
-<button class="btn option-btn" onclick="submitChoiceResponse('${element.id}', ${index}, '${option}')">
-${option}
-</button>
-`;
-});
-}
+            // Show appropriate input type
+            if (question.question_type === 'poll') {
+                showPollOptions(question.options);
+                document.getElementById('textInput').classList.add('hidden');
+            } else if (question.question_type === 'text') {
+                document.getElementById('pollOptions').classList.add('hidden');
+                document.getElementById('textInput').classList.remove('hidden');
+                document.getElementById('textResponse').value = '';
+            } else if (question.question_type === 'info') {
+                document.getElementById('pollOptions').classList.add('hidden');
+                document.getElementById('textInput').classList.add('hidden');
+                document.getElementById('submitBtn').style.display = 'none';
+                document.getElementById('results').classList.remove('hidden');
+            }
+        }
 
-content.innerHTML = html;
-}
+        function showPollOptions(options) {
+            const container = document.getElementById('pollOptions');
+            container.classList.remove('hidden');
+            container.innerHTML = '';
 
-// Submit text response
-function submitTextResponse(elementId) {
-const response = document.getElementById('textResponse').value.trim();
-if (!response) return;
+            options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'poll-option';
+                optionDiv.textContent = option;
+                optionDiv.onclick = () => selectPollOption(optionDiv, option);
+                container.appendChild(optionDiv);
+            });
+        }
 
-// Store response
-if (!responses[elementId]) responses[elementId] = [];
-responses[elementId].push({
-user: currentUser,
-response: response,
-timestamp: new Date()
-});
-saveResponses();
-showThankYou();
+        function selectPollOption(element, value) {
+            // Clear previous selections
+            document.querySelectorAll('.poll-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Select current option
+            element.classList.add('selected');
+            element.dataset.selected = value;
+        }
 
-// Show results after a delay
-setTimeout(() => {
-showResults(elementId);
-}, 2000);
-}
+        async function submitResponse() {
+            if (!currentQuestion || hasSubmittedResponse) return;
 
-// Show thank you message
-function showThankYou() {
-document.getElementById('questionContent').style.display = 'none';
-document.getElementById('thankYouMessage').style.display = 'block';
-const messages = [
-"Mistakes make magic! ✨",
-"We wiggle. We wobble. We shine! 💃",
-"Every sparkle starts with a stumble! ⭐",
-"Dancing twice as hard! 🕺",
-"Gracias for sharing! 🙏"
-];
-const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-document.querySelector('.thank-you h2').textContent = randomMessage;
-}
+            let responseValue = '';
 
-// Show results
-function showResults(elementId) {
-const element = presentationElements[elementId];
-const elementResponses = responses[elementId] || [];
+            if (currentQuestion.question_type === 'poll') {
+                const selected = document.querySelector('.poll-option.selected');
+                if (!selected) {
+                    alert('Please select an option before submitting.');
+                    return;
+                }
+                responseValue = selected.dataset.selected;
+            } else if (currentQuestion.question_type === 'text') {
+                responseValue = document.getElementById('textResponse').value.trim();
+                if (!responseValue) {
+                    alert('Please enter a response before submitting.');
+                    return;
+                }
+            }
 
-if (element.type === 'question') {
-// Show text responses
-let html = '<h2>What everyone shared:</h2>';
-elementResponses.forEach(response => {
-html += `
-<div style="background: var(--light-gray); padding: 15px; border-radius: 10px; margin-bottom: 10px; text-align: left;">
-<strong>${response.user}:</strong> ${response.response}
-</div>
-`;
-});
-document.getElementById('resultsContent').innerHTML = html;
-} else {
-// Show poll/vote results
-const results = {};
-element.options.forEach((option, index) => {
-results[index] = {
-text: option,
-count: elementResponses.filter(r => r.option === index).length
-};
-});
-const total = elementResponses.length;
-let html = '<h2>Live Results:</h2><div class="results-chart">';
-Object.values(results).forEach(result => {
-const percentage = total > 0 ? (result.count / total * 100) : 0;
-html += `
-<div class="result-bar">
-<div class="result-label">${result.text}</div>
-<div class="result-fill" style="width: ${percentage}%">
-${result.count}
-</div>
-</div>
-`;
-});
-html += '</div>';
-document.getElementById('resultsContent').innerHTML = html;
-}
-document.getElementById('resultsContent').style.display = 'block';
-}
+            try {
+                const { error } = await supabase
+                    .from('responses')
+                    .insert({
+                        question_id: currentQuestion.id,
+                        participant_name: currentUser,
+                        response_value: responseValue
+                    });
 
-// Save responses to localStorage
-function saveResponses() {
-localStorage.setItem('tlf_responses', JSON.stringify(responses));
-}
+                if (error) throw error;
 
-// Load responses from localStorage
-function loadResponses() {
-const saved = localStorage.getItem('tlf_responses');
-if (saved) {
-responses = JSON.parse(saved);
-}
-}
+                hasSubmittedResponse = true;
+                document.getElementById('submitBtn').style.display = 'none';
+                
+                // Show results
+                document.getElementById('results').classList.remove('hidden');
+                await loadQuestionResults(currentQuestion.id);
 
-// Initialize app when page loads
-document.addEventListener('DOMContentLoaded', function() {
-loadResponses();
-init();
-});
+                // Show thank you message briefly
+                const originalText = document.getElementById('submitBtn').textContent;
+                document.getElementById('submitBtn').textContent = 'Response Submitted! ✨';
+                document.getElementById('submitBtn').style.display = 'block';
+                document.getElementById('submitBtn').disabled = true;
+                
+            } catch (error) {
+                console.error('Error submitting response:', error);
+                alert('Failed to submit response. Please try again.');
+            }
+        }
 
-// Demo slide simulator for admin testing
-function simulateSlideChange(slideName) {
-localStorage.setItem('tlf_current_slide', slideName);
-if (isAdmin) {
-document.getElementById('currentSlideDisplay').textContent = `Current Slide: ${slideName}`;
-updateSyncStatus(`🔄 Manual sync: ${slideName}`);
-}
-}
+        async function loadQuestionResults(questionId) {
+            try {
+                const { data: responses, error } = await supabase
+                    .from('responses')
+                    .select('response_value')
+                    .eq('question_id', questionId);
 
-// Enhanced API endpoint simulation
-// In a real deployment, you'd handle this server-side, but for client-side apps:
-if (window.location.search.includes('slideName=')) {
-// Prevent normal app initialization for API calls
-const urlParams = new URLSearchParams(window.location.search);
-const slideName = urlParams.get('slideName');
-// Store the slide change
-localStorage.setItem('tlf_current_slide', slideName);
-// Log for debugging
-console.log('📡 API Sync received:', slideName);
-// Return minimal response for Google Apps Script
-document.body.innerHTML = `
-<div style="font-family: Arial; padding: 20px; text-align: center; background: #f0f8ff;">
-<h2>✅ Sync Successful</h2>
-<p>Slide updated to: <strong>${slideName}</strong></p>
-<p>Timestamp: ${new Date().toISOString()}</p>
-<div style="margin-top: 20px; font-size: 0.9em; color: #666;">
-Two Left Feet Studio - Presentation Sync
-</div>
-</div>
-`;
-}
-</script>
+                if (error) throw error;
+
+                displayResults(responses, currentQuestion);
+                
+                // Update admin response count if in admin view
+                if (!document.getElementById('adminView').classList.contains('hidden')) {
+                    document.getElementById('responseCount').textContent = responses.length;
+                }
+                
+            } catch (error) {
+                console.error('Error loading results:', error);
+            }
+        }
+
+        function displayResults(responses, question) {
+            const container = document.getElementById('resultsContent');
+            const displayContainer = document.getElementById('displayResults');
+            
+            if (question.question_type === 'poll') {
+                const results = calculatePollResults(responses, question.options);
+                const html = generatePollResultsHTML(results, responses.length);
+                container.innerHTML = html;
+                displayContainer.innerHTML = html;
+                
+                // Update display view
+                if (!document.getElementById('displayView').classList.contains('hidden')) {
+                    document.getElementById('displayQuestion').textContent = question.question_text;
+                    document.getElementById('displayResults').classList.remove('hidden');
+                }
+                
+            } else if (question.question_type === 'text') {
+                const html = generateTextResultsHTML(responses);
+                container.innerHTML = html;
+                displayContainer.innerHTML = html;
+            }
+        }
+
+        function calculatePollResults(responses, options) {
+            const counts = {};
+            options.forEach(option => counts[option] = 0);
+            
+            responses.forEach(response => {
+                if (counts.hasOwnProperty(response.response_value)) {
+                    counts[response.response_value]++;
+                }
+            });
+            
+            return counts;
+        }
+
+        function generatePollResultsHTML(results, totalResponses) {
+            let html = '';
+            
+            Object.entries(results).forEach(([option, count]) => {
+                const percentage = totalResponses > 0 ? Math.round((count / totalResponses) * 100) : 0;
+                html += `
+                    <div class="result-item">
+                        <div class="result-label">
+                            <span>${option}</span>
+                            <span>${count} votes</span>
+                        </div>
+                        <div class="result-bar">
+                            <div class="result-fill" style="width: ${percentage}%">
+                                <div class="result-percentage">${percentage}%</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            return html;
+        }
+
+        function generateTextResultsHTML(responses) {
+            if (responses.length === 0) {
+                return '<p style="text-align: center; color: #999;">No responses yet...</p>';
+            }
+            
+            let html = `<h4>Responses (${responses.length}):</h4><div style="max-height: 300px; overflow-y: auto;">`;
+            
+            responses.forEach(response => {
+                const name = response.participant_name || 'Anonymous';
+                html += `
+                    <div style="background: var(--light-gray); padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                        <strong>${name}:</strong> ${response.response_value}
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            return html;
+        }
+
+        // Contact functions
+        function showContact() {
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('waitingScreen').classList.add('hidden');
+            document.getElementById('questionScreen').classList.add('hidden');
+            document.getElementById('contactScreen').classList.remove('hidden');
+        }
+
+        function closeContact() {
+            document.getElementById('contactScreen').classList.add('hidden');
+            
+            // Return to appropriate screen
+            if (currentQuestion) {
+                document.getElementById('questionScreen').classList.remove('hidden');
+            } else if (currentUser) {
+                document.getElementById('waitingScreen').classList.remove('hidden');
+            } else {
+                document.getElementById('welcomeScreen').classList.remove('hidden');
+            }
+        }
+
+        async function submitContact() {
+            const name = document.getElementById('contactName').value.trim();
+            const email = document.getElementById('contactEmail').value.trim();
+            const studio = document.getElementById('contactStudio').value.trim();
+
+            if (!name || !email || !studio) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            try {
+                const { error } = await supabase
+                    .from('contacts')
+                    .insert({
+                        presentation_id: presentationId,
+                        name: name,
+                        email: email,
+                        studio: studio
+                    });
+
+                if (error) throw error;
+
+                alert('Thank you! We\'ll be in touch soon! 💃');
+                
+                // Clear form
+                document.getElementById('contactName').value = '';
+                document.getElementById('contactEmail').value = '';
+                document.getElementById('contactStudio').value = '';
+                
+                closeContact();
+                
+            } catch (error) {
+                console.error('Error submitting contact:', error);
+                alert('Failed to submit contact information. Please try again.');
+            }
+        }
+
+        // Navigation functions
+        async function nextQuestion() {
+            if (!currentQuestion) return;
+            
+            try {
+                const { data: questions, error } = await supabase
+                    .from('questions')
+                    .select('*')
+                    .eq('presentation_id', presentationId)
+                    .order('display_order');
+
+                if (error) throw error;
+
+                const currentIndex = questions.findIndex(q => q.id === currentQuestion.id);
+                if (currentIndex < questions.length - 1) {
+                    await updateSyncState(questions[currentIndex + 1].id);
+                }
+                
+            } catch (error) {
+                console.error('Error navigating to next question:', error);
+            }
+        }
+
+        async function previousQuestion() {
+            if (!currentQuestion) return;
+            
+            try {
+                const { data: questions, error } = await supabase
+                    .from('questions')
+                    .select('*')
+                    .eq('presentation_id', presentationId)
+                    .order('display_order');
+
+                if (error) throw error;
+
+                const currentIndex = questions.findIndex(q => q.id === currentQuestion.id);
+                if (currentIndex > 0) {
+                    await updateSyncState(questions[currentIndex - 1].id);
+                }
+                
+            } catch (error) {
+                console.error('Error navigating to previous question:', error);
+            }
+        }
+
+        async function updateSyncState(questionId) {
+            try {
+                const { error } = await adminSupabase
+                    .from('sync_state')
+                    .upsert({
+                        presentation_id: presentationId,
+                        current_question_id: questionId,
+                        updated_at: new Date().toISOString()
+                    });
+
+                if (error) throw error;
+                
+            } catch (error) {
+                console.error('Error updating sync state:', error);
+            }
+        }
+
+        // Admin functions
+        function updateConnectionStatus(connected) {
+            const indicator = document.getElementById('connectionStatus');
+            const text = document.getElementById('connectionText');
+            
+            if (connected) {
+                indicator.className = 'status-indicator status-connected';
+                text.textContent = 'Connected to database';
+            } else {
+                indicator.className = 'status-indicator status-disconnected';
+                text.textContent = 'Disconnected from database';
+            }
+        }
+
+        function toggleQuestionOptions() {
+            const type = document.getElementById('questionType').value;
+            const container = document.getElementById('pollOptionsContainer');
+            
+            if (type === 'poll') {
+                container.style.display = 'block';
+            } else {
+                container.style.display = 'none';
+            }
+        }
+
+        function addOption() {
+            const container = document.getElementById('optionsList');
+            const optionCount = container.children.length + 1;
+            
+            const optionDiv = document.createElement('div');
+            optionDiv.className = 'option-item';
+            optionDiv.innerHTML = `
+                <input type="text" placeholder="Option ${optionCount}" class="option-input">
+                <button type="button" class="btn btn-secondary btn-small" onclick="removeOption(this)">Remove</button>
+            `;
+            
+            container.appendChild(optionDiv);
+        }
+
+        function removeOption(button) {
+            const container = document.getElementById('optionsList');
+            if (container.children.length > 2) {
+                button.parentElement.remove();
+            } else {
+                alert('You must have at least 2 options for a poll.');
+            }
+        }
+
+        async function saveQuestion(event) {
+            event.preventDefault();
+            
+            const type = document.getElementById('questionType').value;
+            const title = document.getElementById('questionTitleInput').value.trim();
+            const text = document.getElementById('questionTextInput').value.trim();
+            const order = parseInt(document.getElementById('questionOrder').value);
+
+            if (!title || !text) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            let options = [];
+            if (type === 'poll') {
+                const optionInputs = document.querySelectorAll('.option-input');
+                options = Array.from(optionInputs)
+                    .map(input => input.value.trim())
+                    .filter(value => value.length > 0);
+                
+                if (options.length < 2) {
+                    alert('Please provide at least 2 options for a poll.');
+                    return;
+                }
+            }
+
+            try {
+                const { error } = await adminSupabase
+                    .from('questions')
+                    .insert({
+                        presentation_id: presentationId,
+                        title: title,
+                        question_text: text,
+                        question_type: type,
+                        options: options,
+                        display_order: order
+                    });
+
+                if (error) throw error;
+
+                alert('Question saved successfully! ✨');
+                
+                // Reset form
+                document.getElementById('questionForm').reset();
+                document.getElementById('questionOrder').value = '1';
+                toggleQuestionOptions();
+                
+                // Refresh questions list
+                await loadQuestions();
+                
+            } catch (error) {
+                console.error('Error saving question:', error);
+                alert('Failed to save question. Please try again.');
+            }
+        }
+
+        async function loadQuestions() {
+            try {
+                const { data: questions, error } = await supabase
+                    .from('questions')
+                    .select('*')
+                    .eq('presentation_id', presentationId)
+                    .order('display_order');
+
+                if (error) throw error;
+
+                displayQuestionsList(questions);
+                
+            } catch (error) {
+                console.error('Error loading questions:', error);
+            }
+        }
+
+        function displayQuestionsList(questions) {
+            const container = document.getElementById('questionsList');
+            
+            if (questions.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #999;">No questions created yet. Create your first question above!</p>';
+                return;
+            }
+
+            let html = '';
+            questions.forEach(question => {
+                html += `
+                    <div class="question-item">
+                        <div class="question-header">
+                            <div>
+                                <span class="question-title">${question.title}</span>
+                                <span class="question-type">${question.question_type.toUpperCase()}</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <label style="margin: 0;">Order:</label>
+                                <input type="number" value="${question.display_order}" 
+                                       onchange="updateQuestionOrder('${question.id}', this.value)"
+                                       style="width: 60px; padding: 5px; border: 1px solid #ddd; border-radius: 4px;">
+                            </div>
+                        </div>
+                        <p style="margin: 10px 0; color: #666;">${question.question_text}</p>
+                        ${question.question_type === 'poll' ? 
+                            `<p><strong>Options:</strong> ${question.options.join(', ')}</p>` : ''}
+                        <div class="question-actions">
+                            <button class="btn btn-small" onclick="activateQuestion('${question.id}')">Activate</button>
+                            <button class="btn btn-yellow btn-small" onclick="editQuestion('${question.id}')">Edit</button>
+                            <button class="btn btn-secondary btn-small" onclick="deleteQuestion('${question.id}')">Delete</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        async function updateQuestionOrder(questionId, newOrder) {
+            try {
+                const { error } = await adminSupabase
+                    .from('questions')
+                    .update({ display_order: parseInt(newOrder) })
+                    .eq('id', questionId);
+
+                if (error) throw error;
+                
+                // Refresh questions list to show new order
+                await loadQuestions();
+                
+            } catch (error) {
+                console.error('Error updating question order:', error);
+                alert('Failed to update question order.');
+            }
+        }
+
+        async function activateQuestion(questionId) {
+            try {
+                await updateSyncState(questionId);
+                alert('Question activated! All participants will see this question now.');
+                await refreshCurrentQuestion();
+                
+            } catch (error) {
+                console.error('Error activating question:', error);
+                alert('Failed to activate question.');
+            }
+        }
+
+        async function deleteQuestion(questionId) {
+            if (!confirm('Are you sure you want to delete this question? This action cannot be undone.')) {
+                return;
+            }
+
+            try {
+                const { error } = await adminSupabase
+                    .from('questions')
+                    .delete()
+                    .eq('id', questionId);
+
+                if (error) throw error;
+
+                alert('Question deleted successfully.');
+                await loadQuestions();
+                
+            } catch (error) {
+                console.error('Error deleting question:', error);
+                alert('Failed to delete question.');
+            }
+        }
+
+        function editQuestion(questionId) {
+            alert('Edit functionality coming soon! For now, please create a new question and delete the old one.');
+        }
+
+        async function refreshCurrentQuestion() {
+            try {
+                const { data, error } = await supabase
+                    .from('sync_state')
+                    .select(`
+                        current_question_id,
+                        questions:current_question_id (
+                            title,
+                            question_text
+                        )
+                    `)
+                    .eq('presentation_id', presentationId)
+                    .single();
+
+                if (error || !data || !data.current_question_id) {
+                    document.getElementById('activeQuestionTitle').textContent = 'None';
+                    document.getElementById('responseCount').textContent = '0';
+                    return;
+                }
+
+                document.getElementById('activeQuestionTitle').textContent = 
+                    data.questions ? data.questions.title : 'Unknown';
+
+                // Get response count
+                const { data: responses, error: responseError } = await supabase
+                    .from('responses')
+                    .select('id')
+                    .eq('question_id', data.current_question_id);
+
+                if (!responseError) {
+                    document.getElementById('responseCount').textContent = responses.length;
+                }
+                
+            } catch (error) {
+                console.error('Error refreshing current question:', error);
+            }
+        }
+
+        // Export functions
+        async function exportContacts() {
+            try {
+                const { data: contacts, error } = await adminSupabase
+                    .from('contacts')
+                    .select('*')
+                    .eq('presentation_id', presentationId)
+                    .order('created_at');
+
+                if (error) throw error;
+
+                if (contacts.length === 0) {
+                    alert('No contact information to export.');
+                    return;
+                }
+
+                const csv = convertToCSV(contacts, ['name', 'email', 'studio', 'created_at']);
+                downloadCSV(csv, 'two_left_feet_contacts.csv');
+                
+            } catch (error) {
+                console.error('Error exporting contacts:', error);
+                alert('Failed to export contacts.');
+            }
+        }
+
+        async function exportResponses() {
+            try {
+                const { data: responses, error } = await adminSupabase
+                    .from('responses')
+                    .select(`
+                        *,
+                        questions (title, question_text, question_type)
+                    `)
+                    .eq('questions.presentation_id', presentationId)
+                    .order('created_at');
+
+                if (error) throw error;
+
+                if (responses.length === 0) {
+                    alert('No responses to export.');
+                    return;
+                }
+
+                // Flatten the data for CSV
+                const flatData = responses.map(response => ({
+                    question_title: response.questions?.title || 'Unknown',
+                    question_text: response.questions?.question_text || 'Unknown',
+                    question_type: response.questions?.question_type || 'Unknown',
+                    participant_name: response.participant_name || 'Anonymous',
+                    response_value: response.response_value,
+                    created_at: response.created_at
+                }));
+
+                const csv = convertToCSV(flatData, ['question_title', 'question_text', 'question_type', 'participant_name', 'response_value', 'created_at']);
+                downloadCSV(csv, 'two_left_feet_responses.csv');
+                
+            } catch (error) {
+                console.error('Error exporting responses:', error);
+                alert('Failed to export responses.');
+            }
+        }
+
+        function convertToCSV(data, columns) {
+            const header = columns.join(',');
+            const rows = data.map(row => 
+                columns.map(col => {
+                    const value = row[col] || '';
+                    // Escape quotes and wrap in quotes if contains comma
+                    return typeof value === 'string' && (value.includes(',') || value.includes('"')) 
+                        ? `"${value.replace(/"/g, '""')}"` 
+                        : value;
+                }).join(',')
+            );
+            
+            return [header, ...rows].join('\n');
+        }
+
+        function downloadCSV(csv, filename) {
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Event listeners
+        document.getElementById('questionForm').addEventListener('submit', saveQuestion);
+
+        // Initialize app when page loads
+        window.addEventListener('load', initializeApp);
+
+        // Configuration warning
+        if (typeof window !== 'undefined' && SUPABASE_CONFIG.url === 'YOUR_PROJECT_URL_HERE') {
+            console.warn('⚠️ CONFIGURATION REQUIRED: Please update the SUPABASE_CONFIG object with your actual Supabase credentials!');
+        }
+    </script>
 </body>
-</html>ankYou();
-}
-
-// Submit choice response
-function submitChoiceResponse(elementId, optionIndex, optionText) {
-console.log(`✅ ${currentUser} voted for option ${optionIndex}: ${optionText}`);
-// Store response
-if (!responses[elementId]) responses[elementId] = [];
-responses[elementId].push({
-user: currentUser,
-option: optionIndex,
-optionText: optionText,
-timestamp: new Date()
-});
-saveResponses();
-showTh
+</html>
