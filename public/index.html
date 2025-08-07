@@ -4,9 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Two Left Feet Studio</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/supabase/2.39.3/supabase.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;600&family=Poppins:wght@300;400;500;600&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --teal: #20B2AA;
+            --yellow: #FFD700;
+            --coral: #FF6B8A;
+            --lilac: #DDA0DD;
+            --charcoal: #2C3E50;
+            --white: #FFFFFF;
+            --light-gray: #F8F9FA;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -15,1557 +25,1590 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #2dd4bf 0%, #fbbf24 50%, #f472b6 100%);
+            background: linear-gradient(135deg, var(--light-gray) 0%, #E8F4F8 100%);
             min-height: 100vh;
-            color: #1f2937;
+            color: var(--charcoal);
         }
 
         .container {
-            max-width: 900px;
+            max-width: 600px;
             margin: 0 auto;
             padding: 20px;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
         }
 
-        .brand-header {
-            text-align: center;
-            margin-bottom: 30px;
+        .admin-container {
+            max-width: 1000px;
         }
 
-        .brand-title {
+        .display-container {
+            max-width: 100vw;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
             font-family: 'Fredoka', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-size: 2.5em;
+            font-weight: 600;
+            color: var(--teal);
             margin-bottom: 10px;
         }
 
         .tagline {
             font-family: 'Dancing Script', cursive;
-            font-size: 1.5rem;
-            color: #1f2937;
+            font-size: 1.5em;
+            color: var(--coral);
             font-weight: 600;
         }
 
-        .main-card {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            width: 100%;
-            max-width: 700px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .admin-panel {
-            background: white;
+        .card {
+            background: var(--white);
             border-radius: 20px;
             padding: 30px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            width: 100%;
-            max-width: 900px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             margin-bottom: 20px;
         }
 
-        .display-panel {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            width: 100%;
-            max-width: 1200px;
+        .welcome-text {
             text-align: center;
-        }
-
-        .question-title {
-            font-family: 'Fredoka', sans-serif;
-            font-size: 2rem;
-            color: #1f2937;
+            font-size: 1.3em;
+            color: var(--charcoal);
             margin-bottom: 30px;
-            line-height: 1.3;
+            line-height: 1.6;
         }
 
-        .option-btn {
-            background: linear-gradient(135deg, #2dd4bf, #0891b2);
-            color: white;
-            border: none;
-            padding: 15px 25px;
-            margin: 10px;
-            border-radius: 15px;
-            font-size: 1.1rem;
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
             font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 200px;
+            color: var(--charcoal);
         }
 
-        .option-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(45, 212, 191, 0.3);
-        }
-
-        .text-input {
+        .input-group input, .input-group select, .input-group textarea {
             width: 100%;
-            padding: 15px 20px;
-            border: 2px solid #e5e7eb;
-            border-radius: 15px;
-            font-size: 1.1rem;
-            margin: 15px 0;
+            padding: 15px;
+            border: 2px solid #E0E0E0;
+            border-radius: 12px;
+            font-size: 1em;
             font-family: 'Poppins', sans-serif;
+            transition: border-color 0.3s ease;
         }
 
-        .text-input:focus {
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus {
             outline: none;
-            border-color: #2dd4bf;
-            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1);
+            border-color: var(--teal);
         }
 
-        .submit-btn {
-            background: linear-gradient(135deg, #f472b6, #ec4899);
-            color: white;
+        .btn {
+            background: var(--teal);
+            color: var(--white);
             border: none;
             padding: 15px 30px;
-            border-radius: 15px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 15px;
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(244, 114, 182, 0.3);
-        }
-
-        .navigation {
-            display: flex;
-            gap: 15px;
-            margin-top: 30px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .nav-btn {
-            background: #6b7280;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .nav-btn:hover {
-            background: #4b5563;
-            transform: translateY(-1px);
-        }
-
-        .contact-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
-            color: white;
-            border: none;
-            padding: 15px 25px;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 20px rgba(251, 191, 36, 0.3);
-            z-index: 1000;
-        }
-
-        .contact-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 25px rgba(251, 191, 36, 0.4);
-        }
-
-        /* Admin Panel Styles */
-        .admin-section {
-            margin: 30px 0;
-            padding: 20px;
-            border: 2px solid #e5e7eb;
-            border-radius: 15px;
-        }
-
-        .admin-section h3 {
-            font-family: 'Fredoka', sans-serif;
-            color: #2dd4bf;
-            margin-bottom: 15px;
-            font-size: 1.3rem;
-        }
-
-        .form-group {
-            margin: 15px 0;
-            text-align: left;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
+            border-radius: 12px;
+            font-size: 1.1em;
             font-weight: 500;
-            color: #374151;
-        }
-
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e5e7eb;
-            border-radius: 10px;
-            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
             font-family: 'Poppins', sans-serif;
+            display: inline-block;
+            text-decoration: none;
         }
 
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            outline: none;
-            border-color: #2dd4bf;
-            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1);
+        .btn:hover {
+            background: #1A9B96;
+            transform: translateY(-2px);
         }
 
-        .options-container {
-            margin: 15px 0;
+        .btn-secondary {
+            background: var(--coral);
         }
 
-        .option-input-group {
-            display: flex;
-            gap: 10px;
-            margin: 10px 0;
-            align-items: center;
+        .btn-secondary:hover {
+            background: #FF5577;
         }
 
-        .option-input {
-            flex: 1;
+        .btn-yellow {
+            background: var(--yellow);
+            color: var(--charcoal);
         }
 
-        .remove-option-btn {
-            background: #ef4444;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9rem;
+        .btn-yellow:hover {
+            background: #FFC700;
         }
 
-        .add-option-btn {
-            background: #10b981;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            margin-top: 10px;
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 0.9em;
         }
 
-        .question-list {
-            margin-top: 20px;
+        .poll-options {
+            display: grid;
+            gap: 15px;
+            margin: 20px 0;
         }
 
-        .question-item {
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
+        .poll-option {
+            background: var(--light-gray);
+            border: 2px solid #E0E0E0;
+            border-radius: 12px;
             padding: 15px;
-            margin: 10px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .question-item h4 {
-            color: #1f2937;
-            margin-bottom: 5px;
-        }
-
-        .question-item p {
-            color: #6b7280;
-            font-size: 0.9rem;
-        }
-
-        .question-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .edit-btn, .delete-btn {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 8px;
             cursor: pointer;
-            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            font-weight: 500;
         }
 
-        .edit-btn {
-            background: #3b82f6;
-            color: white;
+        .poll-option:hover {
+            border-color: var(--teal);
+            background: #E8F4F8;
         }
 
-        .delete-btn {
-            background: #ef4444;
-            color: white;
+        .poll-option.selected {
+            background: var(--teal);
+            color: var(--white);
+            border-color: var(--teal);
         }
 
-        .results-summary {
+        .results-container {
             margin-top: 30px;
-            padding: 20px;
-            background: #f0f9ff;
-            border-radius: 15px;
-            border-left: 5px solid #2dd4bf;
-        }
-
-        .results-summary h3 {
-            color: #1f2937;
-            margin-bottom: 15px;
-            font-family: 'Fredoka', sans-serif;
         }
 
         .result-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #e0f2fe;
+            margin-bottom: 20px;
         }
 
-        .result-item:last-child {
-            border-bottom: none;
+        .result-label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
         }
 
         .result-bar {
-            background: #e0f2fe;
             height: 30px;
+            background: var(--light-gray);
             border-radius: 15px;
-            margin: 10px 0;
             overflow: hidden;
             position: relative;
         }
 
         .result-fill {
             height: 100%;
-            background: linear-gradient(135deg, #2dd4bf, #0891b2);
+            background: linear-gradient(90deg, var(--teal) 0%, var(--coral) 100%);
             border-radius: 15px;
             transition: width 0.5s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-        }
-
-        /* Display Panel Styles */
-        .display-question {
-            font-family: 'Fredoka', sans-serif;
-            font-size: 3rem;
-            color: #1f2937;
-            margin-bottom: 40px;
-            line-height: 1.2;
-        }
-
-        .display-results {
-            display: grid;
-            gap: 20px;
-            margin-top: 40px;
-        }
-
-        .display-result-item {
-            background: #f9fafb;
-            border-radius: 15px;
-            padding: 20px;
-        }
-
-        .display-option-text {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 15px;
-        }
-
-        .display-result-bar {
-            background: #e5e7eb;
-            height: 50px;
-            border-radius: 25px;
-            overflow: hidden;
             position: relative;
         }
 
-        .display-result-fill {
-            height: 100%;
-            border-radius: 25px;
-            transition: width 0.8s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.3rem;
-            font-weight: 700;
-        }
-
-        .waiting-message {
-            font-family: 'Fredoka', sans-serif;
-            font-size: 2rem;
-            color: #6b7280;
-            text-align: center;
-            margin: 50px 0;
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 2000;
-            backdrop-filter: blur(5px);
-        }
-
-        .modal-content {
+        .result-percentage {
             position: absolute;
+            right: 10px;
             top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
+            transform: translateY(-50%);
+            color: var(--white);
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
 
-        .modal h2 {
-            font-family: 'Fredoka', sans-serif;
-            color: #2dd4bf;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 15px;
+        .floating-contact {
+            position: fixed;
+            bottom: 20px;
             right: 20px;
-            background: none;
+            background: var(--coral);
+            color: var(--white);
             border: none;
-            font-size: 2rem;
-            color: #6b7280;
+            border-radius: 50px;
+            padding: 12px 20px;
+            font-weight: 600;
             cursor: pointer;
+            box-shadow: 0 5px 20px rgba(255, 107, 138, 0.4);
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9em;
+            z-index: 1000;
         }
 
-        /* Responsive Design */
+        .floating-contact:hover {
+            background: #FF5577;
+            transform: translateY(-2px);
+        }
+
+        .admin-header {
+            background: var(--charcoal);
+            color: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .admin-title {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .admin-subtitle {
+            opacity: 0.8;
+        }
+
+        .admin-section {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .admin-section h3 {
+            font-family: 'Fredoka', sans-serif;
+            color: var(--teal);
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .question-form {
+            display: grid;
+            gap: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .options-container {
+            border: 2px dashed #E0E0E0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+
+        .option-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .option-item input {
+            flex: 1;
+        }
+
+        .questions-list {
+            margin-top: 30px;
+        }
+
+        .question-item {
+            background: var(--light-gray);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 2px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+
+        .question-item:hover {
+            border-color: var(--teal);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .question-title {
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-right: 10px;
+        }
+
+        .question-type {
+            background: var(--teal);
+            color: var(--white);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+
+        .question-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .navigation-controls {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background: rgba(44, 62, 80, 0.8);
+            color: var(--white);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .nav-btn:hover {
+            background: var(--charcoal);
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-connected {
+            background: #4CAF50;
+        }
+
+        .status-disconnected {
+            background: #F44336;
+        }
+
+        .display-results {
+            font-size: 1.5em;
+        }
+
+        .display-results .result-bar {
+            height: 50px;
+        }
+
+        .display-results .result-label {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+
+        .display-question {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 40px;
+            color: var(--charcoal);
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 15px;
             }
 
-            .brand-title {
-                font-size: 2rem;
+            .card {
+                padding: 20px;
+                margin-bottom: 15px;
+            }
+
+            .logo {
+                font-size: 2em;
             }
 
             .tagline {
-                font-size: 1.2rem;
+                font-size: 1.2em;
             }
 
-            .main-card, .admin-panel {
-                padding: 25px;
+            .welcome-text {
+                font-size: 1.1em;
             }
 
-            .question-title {
-                font-size: 1.5rem;
+            .form-row {
+                grid-template-columns: 1fr;
             }
 
-            .display-question {
-                font-size: 2rem;
-            }
-
-            .option-btn {
-                min-width: 150px;
-                margin: 8px 5px;
-            }
-
-            .contact-btn {
-                bottom: 15px;
-                right: 15px;
-                padding: 12px 20px;
-            }
-
-            .navigation {
-                margin-top: 20px;
-            }
-
-            .option-input-group {
-                flex-direction: column;
-                gap: 5px;
-            }
-
-            .question-item {
+            .question-header {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 10px;
             }
 
             .question-actions {
-                width: 100%;
-                justify-content: flex-end;
+                flex-wrap: wrap;
+            }
+
+            .display-question {
+                font-size: 1.8em;
+                margin-bottom: 30px;
+            }
+
+            .floating-contact {
+                bottom: 15px;
+                right: 15px;
+                padding: 10px 16px;
+                font-size: 0.85em;
+            }
+
+            .navigation-controls {
+                bottom: 15px;
+                left: 15px;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .nav-btn {
+                padding: 8px 12px;
+                font-size: 0.8em;
+            }
+
+            .admin-container {
+                max-width: 100%;
+                padding: 10px;
+            }
+
+            .admin-section {
+                padding: 20px;
+            }
+
+            .btn {
+                padding: 12px 24px;
+                font-size: 1em;
+            }
+
+            .input-group input, .input-group select, .input-group textarea {
+                padding: 12px;
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+
+            .poll-option {
+                padding: 12px;
+                font-size: 1em;
+            }
+
+            .result-bar {
+                height: 25px;
+            }
+
+            .display-results .result-bar {
+                height: 40px;
+            }
+
+            .question-item {
+                padding: 15px;
+            }
+
+            .option-item {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .option-item input {
+                margin-bottom: 0;
             }
         }
 
         @media (max-width: 480px) {
-            .main-card, .admin-panel, .modal-content {
-                padding: 20px;
+            .logo {
+                font-size: 1.8em;
             }
 
-            .brand-title {
-                font-size: 1.8rem;
-            }
-
-            .question-title {
-                font-size: 1.3rem;
+            .tagline {
+                font-size: 1.1em;
             }
 
             .display-question {
-                font-size: 1.8rem;
+                font-size: 1.5em;
             }
 
-            .option-btn {
-                min-width: 120px;
-                padding: 12px 20px;
-                font-size: 1rem;
-            }
-
-            .contact-btn {
-                width: calc(100% - 30px);
-                left: 15px;
-                right: 15px;
-                border-radius: 15px;
+            .floating-contact {
                 position: fixed;
-                bottom: 15px;
+                bottom: 10px;
+                right: 10px;
+                left: 10px;
+                border-radius: 12px;
+                text-align: center;
             }
-        }
 
-        /* Success/Error Messages */
-        .message {
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin: 15px 0;
-            text-align: center;
-            font-weight: 500;
-        }
+            .navigation-controls {
+                bottom: 70px; /* Above the contact button */
+                left: 10px;
+                right: 10px;
+                flex-direction: row;
+                justify-content: space-between;
+            }
 
-        .message.success {
-            background: #dcfce7;
-            color: #166534;
-            border: 1px solid #bbf7d0;
-        }
+            .card {
+                border-radius: 15px;
+                padding: 18px;
+            }
 
-        .message.error {
-            background: #fef2f2;
-            color: #991b1b;
-            border: 1px solid #fecaca;
-        }
-
-        /* Loading States */
-        .loading {
-            opacity: 0.6;
-            pointer-events: none;
-        }
-
-        .spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #ffffff;
-            border-radius: 50%;
-            border-top-color: transparent;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+            .admin-section {
+                padding: 15px;
+                border-radius: 10px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="brand-header">
-            <h1 class="brand-title">Two Left Feet Studio</h1>
-            <p class="tagline">Get ready to wiggle, wobble, and shine with us!</p>
+    <!-- Participant View -->
+    <div id="participantView" class="container">
+        <div class="header">
+            <div class="logo">🩰 Two Left Feet Studio</div>
+            <div class="tagline">Get ready to wiggle, wobble, and shine with us!</div>
         </div>
 
-        <!-- Participant View -->
-        <div id="participantView" class="main-card">
-            <div id="welcomeScreen">
-                <h2 style="font-family: 'Fredoka', sans-serif; margin-bottom: 20px;">Enter your name to join the fun (optional):</h2>
-                <input type="text" id="participantName" class="text-input" placeholder="Your name...">
-                <button onclick="setParticipantName()" class="submit-btn">Join In!</button>
+        <!-- Welcome Screen -->
+        <div id="welcomeScreen" class="card">
+            <div class="welcome-text">
+                Welcome to our interactive presentation! Join the fun and let your voice be heard.
             </div>
-
-            <div id="questionScreen" style="display: none;">
-                <h2 id="currentQuestion" class="question-title"></h2>
-                <div id="questionContent"></div>
-                <div id="responseMessage" style="margin-top: 20px; color: #10b981; font-weight: 500;"></div>
-                
-                <div class="navigation">
-                    <button onclick="previousQuestion()" class="nav-btn">← Previous</button>
-                    <button onclick="nextQuestion()" class="nav-btn">Next →</button>
-                </div>
+            <div class="input-group">
+                <label for="participantName">Enter your name to join the fun (optional):</label>
+                <input type="text" id="participantName" placeholder="Your name here...">
             </div>
+            <button class="btn" onclick="joinPresentation()">Let's Dance! 🕺💃</button>
+        </div>
 
-            <div id="resultsContainer" class="results-summary" style="display: none;">
-                <h3>Current Results:</h3>
-                <div id="resultsDisplay"></div>
+        <!-- Waiting Screen -->
+        <div id="waitingScreen" class="card hidden">
+            <div class="welcome-text">
+                <span id="welcomeMessage">Welcome! </span>We're getting ready for the next interaction. Stay tuned!
+            </div>
+            <div style="text-align: center; margin-top: 30px;">
+                <div style="font-size: 3em;">🎪</div>
+                <p style="margin-top: 15px; color: var(--coral); font-weight: 500;">Waiting for the next question...</p>
             </div>
         </div>
 
-        <!-- Admin Panel -->
-        <div id="adminPanel" class="admin-panel" style="display: none;">
-            <h2 style="font-family: 'Fredoka', sans-serif; color: #2dd4bf; text-align: center; margin-bottom: 30px;">Admin Panel</h2>
+        <!-- Question Screen -->
+        <div id="questionScreen" class="card hidden">
+            <h2 id="questionTitle" style="color: var(--teal); margin-bottom: 20px;"></h2>
+            <p id="questionText" style="font-size: 1.2em; margin-bottom: 25px;"></p>
             
-            <!-- Current Status -->
-            <div class="admin-section">
-                <h3>Current Status</h3>
-                <p><strong>Active Question:</strong> <span id="currentQuestionDisplay">None</span></p>
-                <div style="margin-top: 15px;">
-                    <button onclick="previousQuestion()" class="nav-btn">← Previous Question</button>
-                    <button onclick="nextQuestion()" class="nav-btn">Next Question →</button>
-                </div>
+            <!-- Poll Options -->
+            <div id="pollOptions" class="poll-options hidden"></div>
+            
+            <!-- Text Input -->
+            <div id="textInput" class="input-group hidden">
+                <textarea id="textResponse" placeholder="Share your thoughts..." rows="4"></textarea>
             </div>
+            
+            <!-- Submit Button -->
+            <button id="submitBtn" class="btn" onclick="submitResponse()">Submit Response</button>
+            
+            <!-- Results -->
+            <div id="results" class="results-container hidden">
+                <h3 style="color: var(--teal); margin-bottom: 20px;">Live Results:</h3>
+                <div id="resultsContent"></div>
+            </div>
+        </div>
 
-            <!-- Add New Question -->
-            <div class="admin-section">
-                <h3>Add New Question</h3>
-                <div class="form-group">
-                    <label>Question Text:</label>
-                    <textarea id="newQuestionText" rows="3" placeholder="Enter your question..."></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label>Question Type:</label>
-                    <select id="newQuestionType" onchange="toggleOptions()">
-                        <option value="poll">Poll (Multiple Choice)</option>
-                        <option value="text">Text Response</option>
-                        <option value="info">Information Display</option>
-                    </select>
+        <!-- Contact Screen -->
+        <div id="contactScreen" class="card hidden">
+            <h2 style="color: var(--coral); margin-bottom: 20px;">Stay Connected! 📧</h2>
+            <p style="margin-bottom: 25px;">We'd love to keep in touch and share more about our dance programs.</p>
+            
+            <div class="input-group">
+                <label for="contactName">Name *</label>
+                <input type="text" id="contactName" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="contactEmail">Email *</label>
+                <input type="email" id="contactEmail" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="contactStudio">Preferred Studio Location *</label>
+                <input type="text" id="contactStudio" placeholder="e.g., Downtown, Suburbs, Online" required>
+            </div>
+            
+            <button class="btn btn-secondary" onclick="submitContact()">Join Our Dance Family! 💃</button>
+            <button class="btn btn-yellow" onclick="closeContact()">Maybe Later</button>
+        </div>
+
+        <!-- Navigation Controls -->
+        <div class="navigation-controls">
+            <button class="nav-btn" onclick="previousQuestion()">⬅ Previous</button>
+            <button class="nav-btn" onclick="nextQuestion()">Next ➡</button>
+        </div>
+
+        <!-- Floating Contact Button -->
+        <button class="floating-contact" onclick="showContact()">Add Contact</button>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="adminView" class="container admin-container hidden">
+        <div class="admin-header">
+            <div class="admin-title">🩰 Admin Panel</div>
+            <div class="admin-subtitle">Two Left Feet Studio Presentation Control</div>
+            <div style="margin-top: 10px;">
+                <span class="status-indicator status-disconnected" id="connectionStatus"></span>
+                <span id="connectionText">Connecting to database...</span>
+            </div>
+        </div>
+
+        <!-- Create Question Section -->
+        <div class="admin-section">
+            <h3>Create New Question</h3>
+            <form class="question-form" id="questionForm">
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="questionType">Question Type</label>
+                        <select id="questionType" onchange="toggleQuestionOptions()">
+                            <option value="poll">Poll (Multiple Choice)</option>
+                            <option value="text">Text Response</option>
+                            <option value="info">Information Display</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="questionOrder">Display Order</label>
+                        <input type="number" id="questionOrder" min="1" value="1">
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label>Question Order:</label>
-                    <input type="number" id="newQuestionOrder" placeholder="1, 2, 3..." value="1" min="1">
+                <div class="input-group">
+                    <label for="questionTitleInput">Question Title (matches slide title)</label>
+                    <input type="text" id="questionTitleInput" placeholder="e.g., Poll 1, Q&A 2, Vote 3" required>
                 </div>
 
-                <div id="optionsContainer" class="form-group">
-                    <label>Options:</label>
-                    <div class="options-container" id="optionsList">
-                        <div class="option-input-group">
-                            <input type="text" class="option-input" placeholder="Option 1">
-                            <button type="button" class="remove-option-btn" onclick="removeOption(this)">Remove</button>
+                <div class="input-group">
+                    <label for="questionTextInput">Question Text</label>
+                    <textarea id="questionTextInput" placeholder="Enter your question or information here..." rows="3" required></textarea>
+                </div>
+
+                <!-- Poll Options -->
+                <div id="pollOptionsContainer" class="options-container">
+                    <label>Answer Options</label>
+                    <div id="optionsList">
+                        <div class="option-item">
+                            <input type="text" placeholder="Option 1" class="option-input">
+                            <button type="button" class="btn btn-secondary btn-small" onclick="removeOption(this)">Remove</button>
                         </div>
-                        <div class="option-input-group">
-                            <input type="text" class="option-input" placeholder="Option 2">
-                            <button type="button" class="remove-option-btn" onclick="removeOption(this)">Remove</button>
+                        <div class="option-item">
+                            <input type="text" placeholder="Option 2" class="option-input">
+                            <button type="button" class="btn btn-secondary btn-small" onclick="removeOption(this)">Remove</button>
                         </div>
                     </div>
-                    <button type="button" class="add-option-btn" onclick="addOption()">+ Add Option</button>
+                    <button type="button" class="btn btn-yellow btn-small" onclick="addOption()">Add Option</button>
                 </div>
 
-                <button onclick="addQuestion()" class="submit-btn">Add Question</button>
-            </div>
+                <button type="submit" class="btn">Save Question</button>
+            </form>
+        </div>
 
-            <!-- Existing Questions -->
-            <div class="admin-section">
-                <h3>Existing Questions</h3>
-                <div id="questionsList"></div>
-            </div>
-
-            <!-- Export Contacts -->
-            <div class="admin-section">
-                <h3>Export Data</h3>
-                <button onclick="exportContacts()" class="submit-btn">Download Contacts CSV</button>
-                <button onclick="exportResponses()" class="submit-btn">Download Responses CSV</button>
+        <!-- Current Question Status -->
+        <div class="admin-section">
+            <h3>Current Status</h3>
+            <div id="currentQuestionStatus">
+                <p><strong>Active Question:</strong> <span id="activeQuestionTitle">None</span></p>
+                <p><strong>Response Count:</strong> <span id="responseCount">0</span></p>
+                <button class="btn btn-secondary" onclick="refreshCurrentQuestion()">Refresh Status</button>
             </div>
         </div>
 
-        <!-- Display Panel -->
-        <div id="displayPanel" class="display-panel" style="display: none;">
-            <div class="brand-header">
-                <h1 class="brand-title">Two Left Feet Studio</h1>
+        <!-- Saved Questions -->
+        <div class="admin-section">
+            <h3>Saved Questions</h3>
+            <div id="questionsList" class="questions-list">
+                <!-- Questions will be populated here -->
             </div>
-            
-            <div id="displayContent">
-                <div class="waiting-message">Waiting for the next question...</div>
-            </div>
+            <button class="btn btn-yellow" onclick="loadQuestions()">Refresh Questions</button>
         </div>
 
-        <!-- Contact Button -->
-        <button class="contact-btn" onclick="openContactModal()">Add Contact</button>
+        <!-- Export Data -->
+        <div class="admin-section">
+            <h3>Export Data</h3>
+            <button class="btn btn-secondary" onclick="exportContacts()">Export Contacts (CSV)</button>
+            <button class="btn btn-yellow" onclick="exportResponses()">Export All Responses (CSV)</button>
+        </div>
+    </div>
 
-        <!-- Contact Modal -->
-        <div id="contactModal" class="modal">
-            <div class="modal-content">
-                <button class="close-modal" onclick="closeContactModal()">&times;</button>
-                <h2>Add Contact</h2>
-                <div class="form-group">
-                    <label>Name:</label>
-                    <input type="text" id="contactName" placeholder="Your name">
-                </div>
-                <div class="form-group">
-                    <label>Email:</label>
-                    <input type="email" id="contactEmail" placeholder="your.email@example.com">
-                </div>
-                <div class="form-group">
-                    <label>Studio/Organization:</label>
-                    <input type="text" id="contactStudio" placeholder="Studio name">
-                </div>
-                <button onclick="submitContact()" class="submit-btn">Submit Contact</button>
-            </div>
+    <!-- Display Panel -->
+    <div id="displayView" class="container display-container hidden">
+        <div class="header">
+            <div class="logo" style="font-size: 4em;">🩰 Two Left Feet Studio</div>
+        </div>
+
+        <div id="displayContent" class="card">
+            <div id="displayQuestion" class="display-question">Waiting for next question...</div>
+            <div id="displayResults" class="results-container display-results hidden"></div>
         </div>
     </div>
 
     <script>
-        // Configuration - UPDATE THESE WITH YOUR SUPABASE DETAILS
-        const SUPABASE_URL = ' https://tftahystxwfglgvrnqna.supabase.co'
-        const SUPABASE_ANON_KEY = ' eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRmdGFoeXN0eHdmZ2xndnJucW5hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MTA3MDQsImV4cCI6MjA3MDA4NjcwNH0.wevbNJ9mhNwM2kS_MUfQzc9Xx2DT6U_NcgwwV69LQrA'
-        const SUPABASE_SERVICE_KEY = ' eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRmdGFoeXN0eHdmZ2xndnJucW5hIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDUxMDcwNCwiZXhwIjoyMDcwMDg2NzA0fQ.URZ02i5NX1uk6ckiFzfH1O8kG5oEC2932bWxEbJt_yY'
+        // Configuration - Replace these with your actual Supabase values
+        const SUPABASE_CONFIG = {
+            url: 'https://tftahystxwfglgvrnqna.supabase.co',  // Replace with your Project URL
+            anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRmdGFoeXN0eHdmZ2xndnJucW5hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MTA3MDQsImV4cCI6MjA3MDA4NjcwNH0.wevbNJ9mhNwM2kS_MUfQzc9Xx2DT6U_NcgwwV69LQrA',  // Replace with your anon key
+            serviceKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRmdGFoeXN0eHdmZ2xndnJucW5hIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDUxMDcwNCwiZXhwIjoyMDcwMDg2NzA0fQ.URZ02i5NX1uk6ckiFzfH1O8kG5oEC2932bWxEbJt_yY'  // Replace with your service key
+        };
 
         // Initialize Supabase
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-        const supabaseAdmin = supabase.createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+        let supabase;
+        let adminSupabase;
+        let presentationId;
+        let currentUser = null;
+        let currentQuestion = null;
+        let hasSubmittedResponse = false;
 
-        // App State
-        let currentQuestionId = null
-        let participantName = ''
-        let isAdmin = false
-        let isDisplay = false
-        let questions = []
-        let currentQuestionData = null
-
-        // Initialize App
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('App initialized successfully')
-            
-            // Check URL parameters
-            const urlParams = new URLSearchParams(window.location.search)
-            isAdmin = urlParams.get('admin') === 'twoleftfeet2024'
-            isDisplay = urlParams.get('display') === 'true'
-
-            console.log('URL Parameters:', { admin: urlParams.get('admin'), display: urlParams.get('display') })
-
-            if (isAdmin) {
-                console.log('Loading ADMIN view')
-                showAdminPanel()
-            } else if (isDisplay) {
-                console.log('Loading DISPLAY view')  
-                showDisplayPanel()
-            } else {
-                console.log('Loading PARTICIPANT view')
-                showParticipantView()
-            }
-
-            // Load initial data
-            loadQuestions()
-            loadCurrentQuestion()
-            
-            // Set up real-time subscriptions
-            setupRealtimeSubscriptions()
-        })
-
-        // View Management
-        function showParticipantView() {
-            document.getElementById('participantView').style.display = 'block'
-            document.getElementById('adminPanel').style.display = 'none'
-            document.getElementById('displayPanel').style.display = 'none'
-        }
-
-        function showAdminPanel() {
-            document.getElementById('participantView').style.display = 'none'
-            document.getElementById('adminPanel').style.display = 'block'
-            document.getElementById('displayPanel').style.display = 'none'
-            loadQuestionsForAdmin()
-        }
-
-        function showDisplayPanel() {
-            document.getElementById('participantView').style.display = 'none'
-            document.getElementById('adminPanel').style.display = 'none'
-            document.getElementById('displayPanel').style.display = 'block'
-        }
-
-        // Real-time Subscriptions
-        function setupRealtimeSubscriptions() {
-            // Subscribe to sync_state changes
-            supabaseClient
-                .channel('sync-state-changes')
-                .on('postgres_changes', 
-                    { event: '*', schema: 'public', table: 'sync_state' }, 
-                    (payload) => {
-                        console.log('Sync state changed:', payload)
-                        loadCurrentQuestion()
-                    }
-                )
-                .subscribe()
-
-            // Subscribe to responses for real-time results
-            supabaseClient
-                .channel('responses-changes')
-                .on('postgres_changes', 
-                    { event: 'INSERT', schema: 'public', table: 'responses' }, 
-                    (payload) => {
-                        console.log('New response:', payload)
-                        if (currentQuestionId) {
-                            updateResults()
-                        }
-                    }
-                )
-                .subscribe()
-
-            // Subscribe to questions changes
-            supabaseClient
-                .channel('questions-changes')
-                .on('postgres_changes', 
-                    { event: '*', schema: 'public', table: 'questions' }, 
-                    (payload) => {
-                        console.log('Questions changed:', payload)
-                        loadQuestions()
-                    }
-                )
-                .subscribe()
-        }
-
-        // Question Management
-        async function loadQuestions() {
+        // Initialize the app
+        async function initializeApp() {
             try {
-                const { data, error } = await supabaseClient
-                    .from('questions')
-                    .select('*')
-                    .order('display_order')
-
-                if (error) throw error
-
-                questions = data || []
-                console.log('Loaded questions:', questions)
-
-                if (isAdmin) {
-                    displayQuestionsInAdmin()
+                // Check if configuration is set
+                if (SUPABASE_CONFIG.url === 'YOUR_PROJECT_URL_HERE') {
+                    alert('Please configure your Supabase credentials in the code before using the app!');
+                    return;
                 }
+
+                // Initialize Supabase clients
+                supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+                adminSupabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.serviceKey);
+
+                // Get presentation ID
+                const { data: presentations, error } = await supabase
+                    .from('presentations')
+                    .select('id')
+                    .eq('is_active', true)
+                    .single();
+
+                if (error) throw error;
+                presentationId = presentations.id;
+
+                // Determine view mode - CHECK MULTIPLE WAYS
+                const urlParams = new URLSearchParams(window.location.search);
+                const adminParam = urlParams.get('admin');
+                const displayParam = urlParams.get('display');
+                
+                console.log('URL Parameters:', {
+                    admin: adminParam,
+                    display: displayParam,
+                    fullURL: window.location.href
+                });
+
+                if (adminParam === 'twoleftfeet2024') {
+                    console.log('Loading ADMIN view');
+                    showAdminView();
+                } else if (displayParam === 'true') {
+                    console.log('Loading DISPLAY view');
+                    showDisplayView();
+                } else {
+                    console.log('Loading PARTICIPANT view');
+                    showParticipantView();
+                }
+
+                // Set up real-time sync
+                setupRealTimeSync();
+
+                console.log('App initialized successfully');
             } catch (error) {
-                console.error('Error loading questions:', error)
-                showMessage('Error loading questions: ' + error.message, 'error')
+                console.error('Failed to initialize app:', error);
+                alert('Failed to connect to database. Please check your internet connection and try refreshing the page.');
             }
         }
 
-        async function loadCurrentQuestion() {
+        // Show different views
+        function showParticipantView() {
+            document.getElementById('participantView').classList.remove('hidden');
+            document.getElementById('adminView').classList.add('hidden');
+            document.getElementById('displayView').classList.add('hidden');
+        }
+
+        function showAdminView() {
+            document.getElementById('participantView').classList.add('hidden');
+            document.getElementById('adminView').classList.remove('hidden');
+            document.getElementById('displayView').classList.add('hidden');
+            
+            updateConnectionStatus(true);
+            loadQuestions();
+            refreshCurrentQuestion();
+        }
+
+        function showDisplayView() {
+            document.getElementById('participantView').classList.add('hidden');
+            document.getElementById('adminView').classList.add('hidden');
+            document.getElementById('displayView').classList.remove('hidden');
+        }
+
+        // Real-time synchronization
+        function setupRealTimeSync() {
+            // Listen for sync state changes
+            supabase
+                .channel('sync_state')
+                .on('postgres_changes', 
+                    { event: '*', schema: 'public', table: 'sync_state' },
+                    handleSyncChange
+                )
+                .subscribe();
+
+            // Listen for new responses
+            supabase
+                .channel('responses')
+                .on('postgres_changes',
+                    { event: 'INSERT', schema: 'public', table: 'responses' },
+                    handleNewResponse
+                )
+                .subscribe();
+        }
+
+        async function handleSyncChange(payload) {
+            console.log('Sync state changed:', payload);
+            
+            if (payload.new && payload.new.current_question_id) {
+                await loadCurrentQuestion(payload.new.current_question_id);
+            }
+        }
+
+        function handleNewResponse(payload) {
+            console.log('New response received:', payload);
+            if (currentQuestion && payload.new.question_id === currentQuestion.id) {
+                loadQuestionResults(currentQuestion.id);
+            }
+        }
+
+        // Participant functions
+        function joinPresentation() {
+            const name = document.getElementById('participantName').value.trim();
+            currentUser = name || 'Anonymous';
+            
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('waitingScreen').classList.remove('hidden');
+            document.getElementById('welcomeMessage').textContent = name ? `Welcome, ${name}! ` : 'Welcome! ';
+            
+            // Check for current question
+            checkCurrentQuestion();
+        }
+
+        async function checkCurrentQuestion() {
             try {
-                const { data: syncData, error: syncError } = await supabaseClient
+                const { data, error } = await supabase
                     .from('sync_state')
                     .select('current_question_id')
-                    .limit(1)
-                    .single()
+                    .eq('presentation_id', presentationId)
+                    .single();
 
-                if (syncError) throw syncError
-
-                currentQuestionId = syncData?.current_question_id
-
-                if (currentQuestionId) {
-                    const { data: questionData, error: questionError } = await supabaseClient
-                        .from('questions')
-                        .select('*')
-                        .eq('id', currentQuestionId)
-                        .single()
-
-                    if (questionError) throw questionError
-
-                    currentQuestionData = questionData
-                    displayCurrentQuestion()
-                } else {
-                    currentQuestionData = null
-                    displayCurrentQuestion()
+                if (data && data.current_question_id) {
+                    await loadCurrentQuestion(data.current_question_id);
                 }
-
-                // Update admin display
-                if (isAdmin) {
-                    updateCurrentQuestionDisplay()
-                }
-
             } catch (error) {
-                console.error('Error loading current question:', error)
-                showMessage('Error loading current question: ' + error.message, 'error')
+                console.log('No current question found');
             }
         }
 
-        function displayCurrentQuestion() {
-            if (isDisplay) {
-                displayQuestionForDisplay()
-            } else if (!isAdmin) {
-                displayQuestionForParticipant()
+        async function loadCurrentQuestion(questionId) {
+            try {
+                const { data: question, error } = await supabase
+                    .from('questions')
+                    .select('*')
+                    .eq('id', questionId)
+                    .single();
+
+                if (error) throw error;
+
+                currentQuestion = question;
+                hasSubmittedResponse = false;
+                showQuestion(question);
+                
+                // Load existing results
+                await loadQuestionResults(questionId);
+                
+            } catch (error) {
+                console.error('Error loading current question:', error);
             }
         }
 
-        function displayQuestionForParticipant() {
-            const questionScreen = document.getElementById('questionScreen')
-            const welcomeScreen = document.getElementById('welcomeScreen')
-            const questionTitle = document.getElementById('currentQuestion')
-            const questionContent = document.getElementById('questionContent')
+        function showQuestion(question) {
+            // Hide other screens
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('waitingScreen').classList.add('hidden');
+            document.getElementById('contactScreen').classList.add('hidden');
+            document.getElementById('questionScreen').classList.remove('hidden');
 
-            if (!currentQuestionData) {
-                questionTitle.textContent = 'No active question'
-                questionContent.innerHTML = '<p style="color: #6b7280; font-style: italic;">Please wait for the next question...</p>'
-                questionScreen.style.display = 'block'
-                welcomeScreen.style.display = 'none'
-                return
-            }
+            // Populate question content
+            document.getElementById('questionTitle').textContent = question.title;
+            document.getElementById('questionText').textContent = question.question_text;
 
-            // Show question screen
-            questionScreen.style.display = 'block'
-            welcomeScreen.style.display = 'none'
+            // Reset form
+            document.getElementById('results').classList.add('hidden');
+            document.getElementById('submitBtn').style.display = 'block';
 
-            questionTitle.textContent = currentQuestionData.question_text
-
-            if (currentQuestionData.question_type === 'poll') {
-                displayPollQuestion()
-            } else if (currentQuestionData.question_type === 'text') {
-                displayTextQuestion()
-            } else if (currentQuestionData.question_type === 'info') {
-                displayInfoQuestion()
-            }
-
-            // Load and show results if it's a poll
-            if (currentQuestionData.question_type === 'poll') {
-                updateResults()
+            // Show appropriate input type
+            if (question.question_type === 'poll') {
+                showPollOptions(question.options);
+                document.getElementById('textInput').classList.add('hidden');
+            } else if (question.question_type === 'text') {
+                document.getElementById('pollOptions').classList.add('hidden');
+                document.getElementById('textInput').classList.remove('hidden');
+                document.getElementById('textResponse').value = '';
+            } else if (question.question_type === 'info') {
+                document.getElementById('pollOptions').classList.add('hidden');
+                document.getElementById('textInput').classList.add('hidden');
+                document.getElementById('submitBtn').style.display = 'none';
+                document.getElementById('results').classList.remove('hidden');
             }
         }
 
-        function displayPollQuestion() {
-            const questionContent = document.getElementById('questionContent')
-            const options = currentQuestionData.options || []
+        function showPollOptions(options) {
+            const container = document.getElementById('pollOptions');
+            container.classList.remove('hidden');
+            container.innerHTML = '';
 
-            let optionsHtml = ''
             options.forEach((option, index) => {
-                optionsHtml += `<button class="option-btn" onclick="submitPollResponse(${index})">${option}</button>`
-            })
-
-            questionContent.innerHTML = optionsHtml
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'poll-option';
+                optionDiv.textContent = option;
+                optionDiv.onclick = () => selectPollOption(optionDiv, option);
+                container.appendChild(optionDiv);
+            });
         }
 
-        function displayTextQuestion() {
-            const questionContent = document.getElementById('questionContent')
-            questionContent.innerHTML = `
-                <textarea id="textResponse" class="text-input" rows="4" placeholder="Share your thoughts..."></textarea>
-                <button class="submit-btn" onclick="submitTextResponse()">Submit Response</button>
-            `
-        }
-
-        function displayInfoQuestion() {
-            const questionContent = document.getElementById('questionContent')
-            questionContent.innerHTML = `<p style="font-size: 1.1rem; line-height: 1.6; color: #4b5563;">This is an information display.</p>`
-        }
-
-        function displayQuestionForDisplay() {
-            const displayContent = document.getElementById('displayContent')
-
-            if (!currentQuestionData) {
-                displayContent.innerHTML = '<div class="waiting-message">Waiting for the next question...</div>'
-                return
-            }
-
-            let contentHtml = `
-                <div class="display-question">${currentQuestionData.question_text}</div>
-            `
-
-            if (currentQuestionData.question_type === 'poll') {
-                contentHtml += '<div id="displayResults" class="display-results"></div>'
-                displayContent.innerHTML = contentHtml
-                updateDisplayResults()
-            } else if (currentQuestionData.question_type === 'info') {
-                displayContent.innerHTML = contentHtml
-            } else {
-                displayContent.innerHTML = contentHtml + '<div class="waiting-message">Text responses being collected...</div>'
-            }
-        }
-
-        // Response Submission
-        async function submitPollResponse(optionIndex) {
-            try {
-                const { error } = await supabaseClient
-                    .from('responses')
-                    .insert({
-                        question_id: currentQuestionId,
-                        participant_name: participantName || 'Anonymous',
-                        response_option: optionIndex
-                    })
-
-                if (error) throw error
-
-                showMessage('Response submitted! Thanks for participating!', 'success')
-                
-                // Update results immediately
-                setTimeout(() => {
-                    updateResults()
-                }, 500)
-
-            } catch (error) {
-                console.error('Error submitting response:', error)
-                showMessage('Error submitting response: ' + error.message, 'error')
-            }
-        }
-
-        async function submitTextResponse() {
-            const textResponse = document.getElementById('textResponse').value.trim()
+        function selectPollOption(element, value) {
+            // Clear previous selections
+            document.querySelectorAll('.poll-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
             
-            if (!textResponse) {
-                showMessage('Please enter a response before submitting.', 'error')
-                return
+            // Select current option
+            element.classList.add('selected');
+            element.dataset.selected = value;
+        }
+
+        async function submitResponse() {
+            if (!currentQuestion || hasSubmittedResponse) return;
+
+            let responseValue = '';
+
+            if (currentQuestion.question_type === 'poll') {
+                const selected = document.querySelector('.poll-option.selected');
+                if (!selected) {
+                    alert('Please select an option before submitting.');
+                    return;
+                }
+                responseValue = selected.dataset.selected;
+            } else if (currentQuestion.question_type === 'text') {
+                responseValue = document.getElementById('textResponse').value.trim();
+                if (!responseValue) {
+                    alert('Please enter a response before submitting.');
+                    return;
+                }
             }
 
             try {
-                const { error } = await supabaseClient
+                const { error } = await supabase
                     .from('responses')
                     .insert({
-                        question_id: currentQuestionId,
-                        participant_name: participantName || 'Anonymous',
-                        response_text: textResponse
-                    })
+                        question_id: currentQuestion.id,
+                        participant_name: currentUser,
+                        response_value: responseValue
+                    });
 
-                if (error) throw error
+                if (error) throw error;
 
-                showMessage('Response submitted! Thanks for sharing!', 'success')
-                document.getElementById('textResponse').value = ''
-
-            } catch (error) {
-                console.error('Error submitting text response:', error)
-                showMessage('Error submitting response: ' + error.message, 'error')
-            }
-        }
-
-        // Results Display
-        async function updateResults() {
-            if (!currentQuestionData || currentQuestionData.question_type !== 'poll') {
-                document.getElementById('resultsContainer').style.display = 'none'
-                return
-            }
-
-            try {
-                const { data, error } = await supabaseClient
-                    .from('responses')
-                    .select('response_option')
-                    .eq('question_id', currentQuestionId)
-                    .not('response_option', 'is', null)
-
-                if (error) throw error
-
-                const responses = data || []
-                const options = currentQuestionData.options || []
-                const results = {}
-
-                // Count responses for each option
-                options.forEach((option, index) => {
-                    results[index] = {
-                        option: option,
-                        count: responses.filter(r => r.response_option === index).length
-                    }
-                })
-
-                displayResults(results, responses.length)
-
-            } catch (error) {
-                console.error('Error updating results:', error)
-            }
-        }
-
-        function displayResults(results, totalResponses) {
-            const resultsContainer = document.getElementById('resultsContainer')
-            const resultsDisplay = document.getElementById('resultsDisplay')
-
-            if (totalResponses === 0) {
-                resultsContainer.style.display = 'none'
-                return
-            }
-
-            resultsContainer.style.display = 'block'
-
-            let resultsHtml = ''
-            Object.entries(results).forEach(([index, result]) => {
-                const percentage = totalResponses > 0 ? Math.round((result.count / totalResponses) * 100) : 0
-                resultsHtml += `
-                    <div class="result-item">
-                        <span>${result.option}</span>
-                        <span>${result.count} vote${result.count !== 1 ? 's' : ''} (${percentage}%)</span>
-                    </div>
-                    <div class="result-bar">
-                        <div class="result-fill" style="width: ${percentage}%;">
-                            ${percentage > 0 ? percentage + '%' : ''}
-                        </div>
-                    </div>
-                `
-            })
-
-            resultsDisplay.innerHTML = resultsHtml
-        }
-
-        async function updateDisplayResults() {
-            if (!currentQuestionData || currentQuestionData.question_type !== 'poll') return
-
-            try {
-                const { data, error } = await supabaseClient
-                    .from('responses')
-                    .select('response_option')
-                    .eq('question_id', currentQuestionId)
-                    .not('response_option', 'is', null)
-
-                if (error) throw error
-
-                const responses = data || []
-                const options = currentQuestionData.options || []
-                const results = {}
-
-                // Count responses for each option
-                options.forEach((option, index) => {
-                    results[index] = {
-                        option: option,
-                        count: responses.filter(r => r.response_option === index).length
-                    }
-                })
-
-                displayResultsForDisplay(results, responses.length)
-
-            } catch (error) {
-                console.error('Error updating display results:', error)
-            }
-        }
-
-        function displayResultsForDisplay(results, totalResponses) {
-            const displayResults = document.getElementById('displayResults')
-            if (!displayResults) return
-
-            const colors = ['#2dd4bf', '#f472b6', '#fbbf24', '#8b5cf6', '#10b981', '#3b82f6']
-
-            let resultsHtml = ''
-            Object.entries(results).forEach(([index, result], i) => {
-                const percentage = totalResponses > 0 ? Math.round((result.count / totalResponses) * 100) : 0
-                const color = colors[i % colors.length]
+                hasSubmittedResponse = true;
+                document.getElementById('submitBtn').style.display = 'none';
                 
-                resultsHtml += `
-                    <div class="display-result-item">
-                        <div class="display-option-text">${result.option}</div>
-                        <div class="display-result-bar">
-                            <div class="display-result-fill" style="width: ${percentage}%; background: ${color};">
-                                ${percentage > 0 ? `${percentage}% (${result.count})` : '0%'}
+                // Show results
+                document.getElementById('results').classList.remove('hidden');
+                await loadQuestionResults(currentQuestion.id);
+
+                // Show thank you message briefly
+                const originalText = document.getElementById('submitBtn').textContent;
+                document.getElementById('submitBtn').textContent = 'Response Submitted! ✨';
+                document.getElementById('submitBtn').style.display = 'block';
+                document.getElementById('submitBtn').disabled = true;
+                
+            } catch (error) {
+                console.error('Error submitting response:', error);
+                alert('Failed to submit response. Please try again.');
+            }
+        }
+
+        async function loadQuestionResults(questionId) {
+            try {
+                const { data: responses, error } = await supabase
+                    .from('responses')
+                    .select('response_value')
+                    .eq('question_id', questionId);
+
+                if (error) throw error;
+
+                displayResults(responses, currentQuestion);
+                
+                // Update admin response count if in admin view
+                if (!document.getElementById('adminView').classList.contains('hidden')) {
+                    document.getElementById('responseCount').textContent = responses.length;
+                }
+                
+            } catch (error) {
+                console.error('Error loading results:', error);
+            }
+        }
+
+        function displayResults(responses, question) {
+            const container = document.getElementById('resultsContent');
+            const displayContainer = document.getElementById('displayResults');
+            
+            if (question.question_type === 'poll') {
+                const results = calculatePollResults(responses, question.options);
+                const html = generatePollResultsHTML(results, responses.length);
+                container.innerHTML = html;
+                displayContainer.innerHTML = html;
+                
+                // Update display view
+                if (!document.getElementById('displayView').classList.contains('hidden')) {
+                    document.getElementById('displayQuestion').textContent = question.question_text;
+                    document.getElementById('displayResults').classList.remove('hidden');
+                }
+                
+            } else if (question.question_type === 'text') {
+                const html = generateTextResultsHTML(responses);
+                container.innerHTML = html;
+                displayContainer.innerHTML = html;
+            }
+        }
+
+        function calculatePollResults(responses, options) {
+            const counts = {};
+            options.forEach(option => counts[option] = 0);
+            
+            responses.forEach(response => {
+                if (counts.hasOwnProperty(response.response_value)) {
+                    counts[response.response_value]++;
+                }
+            });
+            
+            return counts;
+        }
+
+        function generatePollResultsHTML(results, totalResponses) {
+            let html = '';
+            
+            Object.entries(results).forEach(([option, count]) => {
+                const percentage = totalResponses > 0 ? Math.round((count / totalResponses) * 100) : 0;
+                html += `
+                    <div class="result-item">
+                        <div class="result-label">
+                            <span>${option}</span>
+                            <span>${count} votes</span>
+                        </div>
+                        <div class="result-bar">
+                            <div class="result-fill" style="width: ${percentage}%">
+                                <div class="result-percentage">${percentage}%</div>
                             </div>
                         </div>
                     </div>
-                `
-            })
-
-            displayResults.innerHTML = resultsHtml
+                `;
+            });
+            
+            return html;
         }
 
-        // Navigation
+        function generateTextResultsHTML(responses) {
+            if (responses.length === 0) {
+                return '<p style="text-align: center; color: #999;">No responses yet...</p>';
+            }
+            
+            let html = `<h4>Responses (${responses.length}):</h4><div style="max-height: 300px; overflow-y: auto;">`;
+            
+            responses.forEach(response => {
+                const name = response.participant_name || 'Anonymous';
+                html += `
+                    <div style="background: var(--light-gray); padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                        <strong>${name}:</strong> ${response.response_value}
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            return html;
+        }
+
+        // Contact functions
+        function showContact() {
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('waitingScreen').classList.add('hidden');
+            document.getElementById('questionScreen').classList.add('hidden');
+            document.getElementById('contactScreen').classList.remove('hidden');
+        }
+
+        function closeContact() {
+            document.getElementById('contactScreen').classList.add('hidden');
+            
+            // Return to appropriate screen
+            if (currentQuestion) {
+                document.getElementById('questionScreen').classList.remove('hidden');
+            } else if (currentUser) {
+                document.getElementById('waitingScreen').classList.remove('hidden');
+            } else {
+                document.getElementById('welcomeScreen').classList.remove('hidden');
+            }
+        }
+
+        async function submitContact() {
+            const name = document.getElementById('contactName').value.trim();
+            const email = document.getElementById('contactEmail').value.trim();
+            const studio = document.getElementById('contactStudio').value.trim();
+
+            if (!name || !email || !studio) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            try {
+                const { error } = await supabase
+                    .from('contacts')
+                    .insert({
+                        presentation_id: presentationId,
+                        name: name,
+                        email: email,
+                        studio: studio
+                    });
+
+                if (error) throw error;
+
+                alert('Thank you! We\'ll be in touch soon! 💃');
+                
+                // Clear form
+                document.getElementById('contactName').value = '';
+                document.getElementById('contactEmail').value = '';
+                document.getElementById('contactStudio').value = '';
+                
+                closeContact();
+                
+            } catch (error) {
+                console.error('Error submitting contact:', error);
+                alert('Failed to submit contact information. Please try again.');
+            }
+        }
+
+        // Navigation functions
         async function nextQuestion() {
-            if (!questions.length) return
+            if (!currentQuestion) return;
+            
+            try {
+                const { data: questions, error } = await supabase
+                    .from('questions')
+                    .select('*')
+                    .eq('presentation_id', presentationId)
+                    .order('display_order');
 
-            const currentIndex = questions.findIndex(q => q.id === currentQuestionId)
-            const nextIndex = currentIndex < questions.length - 1 ? currentIndex + 1 : 0
-            const nextQuestion = questions[nextIndex]
+                if (error) throw error;
 
-            await updateSyncState(nextQuestion.id)
+                const currentIndex = questions.findIndex(q => q.id === currentQuestion.id);
+                if (currentIndex < questions.length - 1) {
+                    await updateSyncState(questions[currentIndex + 1].id);
+                }
+                
+            } catch (error) {
+                console.error('Error navigating to next question:', error);
+            }
         }
 
         async function previousQuestion() {
-            if (!questions.length) return
+            if (!currentQuestion) return;
+            
+            try {
+                const { data: questions, error } = await supabase
+                    .from('questions')
+                    .select('*')
+                    .eq('presentation_id', presentationId)
+                    .order('display_order');
 
-            const currentIndex = questions.findIndex(q => q.id === currentQuestionId)
-            const prevIndex = currentIndex > 0 ? currentIndex - 1 : questions.length - 1
-            const prevQuestion = questions[prevIndex]
+                if (error) throw error;
 
-            await updateSyncState(prevQuestion.id)
+                const currentIndex = questions.findIndex(q => q.id === currentQuestion.id);
+                if (currentIndex > 0) {
+                    await updateSyncState(questions[currentIndex - 1].id);
+                }
+                
+            } catch (error) {
+                console.error('Error navigating to previous question:', error);
+            }
         }
 
         async function updateSyncState(questionId) {
             try {
-                console.log('Updating sync state to question:', questionId)
-                
-                const { error } = await supabaseAdmin
+                const { error } = await adminSupabase
                     .from('sync_state')
-                    .update({ 
+                    .upsert({
+                        presentation_id: presentationId,
                         current_question_id: questionId,
                         updated_at: new Date().toISOString()
-                    })
-                    .eq('presentation_id', 1)
+                    });
 
-                if (error) {
-                    console.error('Error updating sync state:', error)
-                    throw error
-                }
-
-                console.log('Sync state updated successfully')
-
+                if (error) throw error;
+                
             } catch (error) {
-                console.error('Error updating sync state:', error)
-                showMessage('Error updating sync state: ' + error.message, 'error')
+                console.error('Error updating sync state:', error);
             }
         }
 
-        // Admin Functions
-        function updateCurrentQuestionDisplay() {
-            const display = document.getElementById('currentQuestionDisplay')
-            if (currentQuestionData) {
-                const questionType = currentQuestionData.question_type.charAt(0).toUpperCase() + currentQuestionData.question_type.slice(1)
-                display.textContent = `${questionType} ${currentQuestionData.display_order || 'N/A'}: ${currentQuestionData.question_text.substring(0, 50)}...`
-            } else {
-                display.textContent = 'None'
-            }
-        }
-
-        function toggleOptions() {
-            const questionType = document.getElementById('newQuestionType').value
-            const optionsContainer = document.getElementById('optionsContainer')
+        // Admin functions
+        function updateConnectionStatus(connected) {
+            const indicator = document.getElementById('connectionStatus');
+            const text = document.getElementById('connectionText');
             
-            optionsContainer.style.display = questionType === 'poll' ? 'block' : 'none'
+            if (connected) {
+                indicator.className = 'status-indicator status-connected';
+                text.textContent = 'Connected to database';
+            } else {
+                indicator.className = 'status-indicator status-disconnected';
+                text.textContent = 'Disconnected from database';
+            }
+        }
+
+        function toggleQuestionOptions() {
+            const type = document.getElementById('questionType').value;
+            const container = document.getElementById('pollOptionsContainer');
+            
+            if (type === 'poll') {
+                container.style.display = 'block';
+            } else {
+                container.style.display = 'none';
+            }
         }
 
         function addOption() {
-            const optionsList = document.getElementById('optionsList')
-            const optionCount = optionsList.children.length + 1
+            const container = document.getElementById('optionsList');
+            const optionCount = container.children.length + 1;
             
-            const optionGroup = document.createElement('div')
-            optionGroup.className = 'option-input-group'
-            optionGroup.innerHTML = `
-                <input type="text" class="option-input" placeholder="Option ${optionCount}">
-                <button type="button" class="remove-option-btn" onclick="removeOption(this)">Remove</button>
-            `
+            const optionDiv = document.createElement('div');
+            optionDiv.className = 'option-item';
+            optionDiv.innerHTML = `
+                <input type="text" placeholder="Option ${optionCount}" class="option-input">
+                <button type="button" class="btn btn-secondary btn-small" onclick="removeOption(this)">Remove</button>
+            `;
             
-            optionsList.appendChild(optionGroup)
+            container.appendChild(optionDiv);
         }
 
         function removeOption(button) {
-            const optionsList = document.getElementById('optionsList')
-            if (optionsList.children.length > 2) {
-                button.parentElement.remove()
+            const container = document.getElementById('optionsList');
+            if (container.children.length > 2) {
+                button.parentElement.remove();
             } else {
-                showMessage('Must have at least 2 options for a poll.', 'error')
+                alert('You must have at least 2 options for a poll.');
             }
         }
 
-        async function addQuestion() {
-            const questionText = document.getElementById('newQuestionText').value.trim()
-            const questionType = document.getElementById('newQuestionType').value
-            const questionOrder = parseInt(document.getElementById('newQuestionOrder').value) || 1
+        async function saveQuestion(event) {
+            event.preventDefault();
+            
+            const type = document.getElementById('questionType').value;
+            const title = document.getElementById('questionTitleInput').value.trim();
+            const text = document.getElementById('questionTextInput').value.trim();
+            const order = parseInt(document.getElementById('questionOrder').value);
 
-            if (!questionText) {
-                showMessage('Please enter a question text.', 'error')
-                return
+            if (!title || !text) {
+                alert('Please fill in all required fields.');
+                return;
             }
 
-            let options = []
-            if (questionType === 'poll') {
-                const optionInputs = document.querySelectorAll('#optionsList .option-input')
+            let options = [];
+            if (type === 'poll') {
+                const optionInputs = document.querySelectorAll('.option-input');
                 options = Array.from(optionInputs)
                     .map(input => input.value.trim())
-                    .filter(option => option)
-
+                    .filter(value => value.length > 0);
+                
                 if (options.length < 2) {
-                    showMessage('Poll questions need at least 2 options.', 'error')
-                    return
+                    alert('Please provide at least 2 options for a poll.');
+                    return;
                 }
             }
 
             try {
-                const { error } = await supabaseAdmin
+                const { error } = await adminSupabase
                     .from('questions')
                     .insert({
-                        question_text: questionText,
-                        question_type: questionType,
-                        options: questionType === 'poll' ? options : [],
-                        display_order: questionOrder,
-                        presentation_id: 1
-                    })
+                        presentation_id: presentationId,
+                        title: title,
+                        question_text: text,
+                        question_type: type,
+                        options: options,
+                        display_order: order
+                    });
 
-                if (error) throw error
+                if (error) throw error;
 
-                showMessage('Question added successfully!', 'success')
+                alert('Question saved successfully! ✨');
                 
-                // Clear form
-                document.getElementById('newQuestionText').value = ''
-                document.getElementById('newQuestionOrder').value = questions.length + 1
+                // Reset form
+                document.getElementById('questionForm').reset();
+                document.getElementById('questionOrder').value = '1';
+                toggleQuestionOptions();
                 
-                // Reset options to default
-                const optionsList = document.getElementById('optionsList')
-                optionsList.innerHTML = `
-                    <div class="option-input-group">
-                        <input type="text" class="option-input" placeholder="Option 1">
-                        <button type="button" class="remove-option-btn" onclick="removeOption(this)">Remove</button>
-                    </div>
-                    <div class="option-input-group">
-                        <input type="text" class="option-input" placeholder="Option 2">
-                        <button type="button" class="remove-option-btn" onclick="removeOption(this)">Remove</button>
-                    </div>
-                `
-
-                // Reload questions
-                loadQuestions()
-
+                // Refresh questions list
+                await loadQuestions();
+                
             } catch (error) {
-                console.error('Error adding question:', error)
-                showMessage('Error adding question: ' + error.message, 'error')
+                console.error('Error saving question:', error);
+                alert('Failed to save question. Please try again.');
             }
         }
 
-        async function loadQuestionsForAdmin() {
-            await loadQuestions()
-            displayQuestionsInAdmin()
+        async function loadQuestions() {
+            try {
+                const { data: questions, error } = await supabase
+                    .from('questions')
+                    .select('*')
+                    .eq('presentation_id', presentationId)
+                    .order('display_order');
+
+                if (error) throw error;
+
+                displayQuestionsList(questions);
+                
+            } catch (error) {
+                console.error('Error loading questions:', error);
+            }
         }
 
-        function displayQuestionsInAdmin() {
-            const questionsList = document.getElementById('questionsList')
+        function displayQuestionsList(questions) {
+            const container = document.getElementById('questionsList');
             
-            if (!questions.length) {
-                questionsList.innerHTML = '<p style="color: #6b7280; font-style: italic;">No questions added yet.</p>'
-                return
+            if (questions.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #999;">No questions created yet. Create your first question above!</p>';
+                return;
             }
 
-            let questionsHtml = ''
-            questions.forEach((question, index) => {
-                const questionType = question.question_type.charAt(0).toUpperCase() + question.question_type.slice(1)
-                questionsHtml += `
+            let html = '';
+            questions.forEach(question => {
+                html += `
                     <div class="question-item">
-                        <div>
-                            <h4>${questionType} ${question.display_order || index + 1}</h4>
-                            <p>${question.question_text}</p>
-                            ${question.question_type === 'poll' ? `<small>Options: ${(question.options || []).join(', ')}</small>` : ''}
+                        <div class="question-header">
+                            <div>
+                                <span class="question-title">${question.title}</span>
+                                <span class="question-type">${question.question_type.toUpperCase()}</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <label style="margin: 0;">Order:</label>
+                                <input type="number" value="${question.display_order}" 
+                                       onchange="updateQuestionOrder('${question.id}', this.value)"
+                                       style="width: 60px; padding: 5px; border: 1px solid #ddd; border-radius: 4px;">
+                            </div>
                         </div>
+                        <p style="margin: 10px 0; color: #666;">${question.question_text}</p>
+                        ${question.question_type === 'poll' ? 
+                            `<p><strong>Options:</strong> ${question.options.join(', ')}</p>` : ''}
                         <div class="question-actions">
-                            <button class="edit-btn" onclick="setCurrentQuestion('${question.id}')">Make Active</button>
-                            <button class="delete-btn" onclick="deleteQuestion('${question.id}')">Delete</button>
+                            <button class="btn btn-small" onclick="activateQuestion('${question.id}')">Activate</button>
+                            <button class="btn btn-yellow btn-small" onclick="editQuestion('${question.id}')">Edit</button>
+                            <button class="btn btn-secondary btn-small" onclick="deleteQuestion('${question.id}')">Delete</button>
                         </div>
                     </div>
-                `
-            })
-
-            questionsList.innerHTML = questionsHtml
-
-            // Update the next question order
-            const nextOrder = Math.max(...questions.map(q => q.display_order || 0)) + 1
-            document.getElementById('newQuestionOrder').value = nextOrder
+                `;
+            });
+            
+            container.innerHTML = html;
         }
 
-        async function setCurrentQuestion(questionId) {
-            await updateSyncState(questionId)
-            showMessage('Question activated!', 'success')
+        async function updateQuestionOrder(questionId, newOrder) {
+            try {
+                const { error } = await adminSupabase
+                    .from('questions')
+                    .update({ display_order: parseInt(newOrder) })
+                    .eq('id', questionId);
+
+                if (error) throw error;
+                
+                // Refresh questions list to show new order
+                await loadQuestions();
+                
+            } catch (error) {
+                console.error('Error updating question order:', error);
+                alert('Failed to update question order.');
+            }
+        }
+
+        async function activateQuestion(questionId) {
+            try {
+                await updateSyncState(questionId);
+                alert('Question activated! All participants will see this question now.');
+                await refreshCurrentQuestion();
+                
+            } catch (error) {
+                console.error('Error activating question:', error);
+                alert('Failed to activate question.');
+            }
         }
 
         async function deleteQuestion(questionId) {
-            if (!confirm('Are you sure you want to delete this question?')) return
+            if (!confirm('Are you sure you want to delete this question? This action cannot be undone.')) {
+                return;
+            }
 
             try {
-                const { error } = await supabaseAdmin
+                const { error } = await adminSupabase
                     .from('questions')
                     .delete()
-                    .eq('id', questionId)
+                    .eq('id', questionId);
 
-                if (error) throw error
+                if (error) throw error;
 
-                showMessage('Question deleted successfully!', 'success')
-                loadQuestions()
-
+                alert('Question deleted successfully.');
+                await loadQuestions();
+                
             } catch (error) {
-                console.error('Error deleting question:', error)
-                showMessage('Error deleting question: ' + error.message, 'error')
+                console.error('Error deleting question:', error);
+                alert('Failed to delete question.');
             }
         }
 
-        // Contact Management
-        function openContactModal() {
-            document.getElementById('contactModal').style.display = 'block'
+        function editQuestion(questionId) {
+            alert('Edit functionality coming soon! For now, please create a new question and delete the old one.');
         }
 
-        function closeContactModal() {
-            document.getElementById('contactModal').style.display = 'none'
-            // Clear form
-            document.getElementById('contactName').value = ''
-            document.getElementById('contactEmail').value = ''
-            document.getElementById('contactStudio').value = ''
-        }
-
-        async function submitContact() {
-            const name = document.getElementById('contactName').value.trim()
-            const email = document.getElementById('contactEmail').value.trim()
-            const studio = document.getElementById('contactStudio').value.trim()
-
-            if (!name || !email) {
-                showMessage('Please fill in at least name and email.', 'error')
-                return
-            }
-
+        async function refreshCurrentQuestion() {
             try {
-                const { error } = await supabaseClient
-                    .from('contacts')
-                    .insert({
-                        name: name,
-                        email: email,
-                        studio: studio
-                    })
+                const { data, error } = await supabase
+                    .from('sync_state')
+                    .select(`
+                        current_question_id,
+                        questions:current_question_id (
+                            title,
+                            question_text
+                        )
+                    `)
+                    .eq('presentation_id', presentationId)
+                    .single();
 
-                if (error) throw error
-
-                showMessage('Contact submitted successfully! Thank you!', 'success')
-                closeContactModal()
-
-            } catch (error) {
-                console.error('Error submitting contact:', error)
-                showMessage('Error submitting contact: ' + error.message, 'error')
-            }
-        }
-
-        // Export Functions
-        async function exportContacts() {
-            try {
-                const { data, error } = await supabaseAdmin
-                    .from('contacts')
-                    .select('*')
-                    .order('created_at', { ascending: false })
-
-                if (error) throw error
-
-                if (!data || data.length === 0) {
-                    showMessage('No contacts to export.', 'error')
-                    return
+                if (error || !data || !data.current_question_id) {
+                    document.getElementById('activeQuestionTitle').textContent = 'None';
+                    document.getElementById('responseCount').textContent = '0';
+                    return;
                 }
 
-                // Convert to CSV
-                const csv = convertToCSV(data, ['name', 'email', 'studio', 'created_at'])
-                downloadCSV(csv, 'contacts.csv')
-                
-                showMessage('Contacts exported successfully!', 'success')
+                document.getElementById('activeQuestionTitle').textContent = 
+                    data.questions ? data.questions.title : 'Unknown';
 
+                // Get response count
+                const { data: responses, error: responseError } = await supabase
+                    .from('responses')
+                    .select('id')
+                    .eq('question_id', data.current_question_id);
+
+                if (!responseError) {
+                    document.getElementById('responseCount').textContent = responses.length;
+                }
+                
             } catch (error) {
-                console.error('Error exporting contacts:', error)
-                showMessage('Error exporting contacts: ' + error.message, 'error')
+                console.error('Error refreshing current question:', error);
+            }
+        }
+
+        // Export functions
+        async function exportContacts() {
+            try {
+                const { data: contacts, error } = await adminSupabase
+                    .from('contacts')
+                    .select('*')
+                    .eq('presentation_id', presentationId)
+                    .order('created_at');
+
+                if (error) throw error;
+
+                if (contacts.length === 0) {
+                    alert('No contact information to export.');
+                    return;
+                }
+
+                const csv = convertToCSV(contacts, ['name', 'email', 'studio', 'created_at']);
+                downloadCSV(csv, 'two_left_feet_contacts.csv');
+                
+            } catch (error) {
+                console.error('Error exporting contacts:', error);
+                alert('Failed to export contacts.');
             }
         }
 
         async function exportResponses() {
             try {
-                const { data, error } = await supabaseAdmin
+                const { data: responses, error } = await adminSupabase
                     .from('responses')
                     .select(`
                         *,
-                        questions (
-                            question_text,
-                            question_type,
-                            options
-                        )
+                        questions (title, question_text, question_type)
                     `)
-                    .order('created_at', { ascending: false })
+                    .eq('questions.presentation_id', presentationId)
+                    .order('created_at');
 
-                if (error) throw error
+                if (error) throw error;
 
-                if (!data || data.length === 0) {
-                    showMessage('No responses to export.', 'error')
-                    return
+                if (responses.length === 0) {
+                    alert('No responses to export.');
+                    return;
                 }
 
                 // Flatten the data for CSV
-                const flatData = data.map(response => ({
-                    participant_name: response.participant_name,
-                    question_text: response.questions?.question_text,
-                    question_type: response.questions?.question_type,
-                    response_text: response.response_text,
-                    response_option: response.response_option !== null ? 
-                        (response.questions?.options?.[response.response_option] || response.response_option) : '',
+                const flatData = responses.map(response => ({
+                    question_title: response.questions?.title || 'Unknown',
+                    question_text: response.questions?.question_text || 'Unknown',
+                    question_type: response.questions?.question_type || 'Unknown',
+                    participant_name: response.participant_name || 'Anonymous',
+                    response_value: response.response_value,
                     created_at: response.created_at
-                }))
+                }));
 
-                const csv = convertToCSV(flatData, ['participant_name', 'question_text', 'question_type', 'response_text', 'response_option', 'created_at'])
-                downloadCSV(csv, 'responses.csv')
+                const csv = convertToCSV(flatData, ['question_title', 'question_text', 'question_type', 'participant_name', 'response_value', 'created_at']);
+                downloadCSV(csv, 'two_left_feet_responses.csv');
                 
-                showMessage('Responses exported successfully!', 'success')
-
             } catch (error) {
-                console.error('Error exporting responses:', error)
-                showMessage('Error exporting responses: ' + error.message, 'error')
+                console.error('Error exporting responses:', error);
+                alert('Failed to export responses.');
             }
         }
 
-        function convertToCSV(data, headers) {
-            const csvContent = [
-                headers.join(','),
-                ...data.map(row => 
-                    headers.map(header => {
-                        const value = row[header] || ''
-                        return `"${String(value).replace(/"/g, '""')}"`
-                    }).join(',')
-                )
-            ].join('\n')
-
-            return csvContent
+        function convertToCSV(data, columns) {
+            const header = columns.join(',');
+            const rows = data.map(row => 
+                columns.map(col => {
+                    const value = row[col] || '';
+                    // Escape quotes and wrap in quotes if contains comma
+                    return typeof value === 'string' && (value.includes(',') || value.includes('"')) 
+                        ? `"${value.replace(/"/g, '""')}"` 
+                        : value;
+                }).join(',')
+            );
+            
+            return [header, ...rows].join('\n');
         }
 
         function downloadCSV(csv, filename) {
-            const blob = new Blob([csv], { type: 'text/csv' })
-            const url = window.URL.createObjectURL(blob)
-            const a = document.createElement('a')
-            a.setAttribute('hidden', '')
-            a.setAttribute('href', url)
-            a.setAttribute('download', filename)
-            document.body.appendChild(a)
-            a.click()
-            document.body.removeChild(a)
-            window.URL.revokeObjectURL(url)
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
-        // Utility Functions
-        function setParticipantName() {
-            const name = document.getElementById('participantName').value.trim()
-            participantName = name || 'Anonymous'
-            
-            // Show current question instead of welcome screen
-            displayCurrentQuestion()
-        }
+        // Event listeners
+        document.getElementById('questionForm').addEventListener('submit', saveQuestion);
 
-        function showMessage(message, type) {
-            // Create message element
-            const messageEl = document.createElement('div')
-            messageEl.className = `message ${type}`
-            messageEl.textContent = message
+        // Initialize app when page loads
+        window.addEventListener('load', initializeApp);
 
-            // Find appropriate container
-            let container
-            if (isAdmin) {
-                container = document.getElementById('adminPanel')
-            } else if (isDisplay) {
-                container = document.getElementById('displayPanel')
-            } else {
-                container = document.getElementById('participantView')
-            }
-
-            // Insert at top
-            container.insertBefore(messageEl, container.firstChild)
-
-            // Remove after 5 seconds
-            setTimeout(() => {
-                if (messageEl.parentNode) {
-                    messageEl.parentNode.removeChild(messageEl)
-                }
-            }, 5000)
-        }
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('contactModal')
-            if (event.target === modal) {
-                closeContactModal()
-            }
+        // Configuration warning
+        if (typeof window !== 'undefined' && SUPABASE_CONFIG.url === 'YOUR_PROJECT_URL_HERE') {
+            console.warn('⚠️ CONFIGURATION REQUIRED: Please update the SUPABASE_CONFIG object with your actual Supabase credentials!');
         }
     </script>
 </body>
+
 </html>
+
